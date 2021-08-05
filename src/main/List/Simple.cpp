@@ -1,58 +1,49 @@
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
-template <class T>  
 
-class Simple
+template <class T>
+struct SimpleList
 {
-private:
     int index = 0;
-    T after;
-public:
-    Simple();
-    Simple(int index, T after);
-    ~Simple();
-    void setIndex(int index);
-    void setAfter(T after);
-    int getIndex();
-    T getAfter();
+    T element;
+    struct SimpleList *after;
 };
 
 template <class T>
-Simple<T>::Simple() {
-
-}
-
-template <class T>
-Simple<T>::Simple(int index, T after) {
-    index = this->index;
-    after = this->after;
-}
-
-template <class T>
-Simple<T>::~Simple()
+void add(int index,SimpleList<T> *&list, T element_) 
 {
+    SimpleList<T> *new_node = new SimpleList<T>();
+    new_node -> element = element_;
+
+    SimpleList<T> *aux_node1 = list;
+    SimpleList<T> *aux_node2;
+
+    while ((aux_node1 != NULL) && (aux_node1->index < index))
+    {
+        aux_node2 = aux_node1;
+        aux_node1 = aux_node1->after;
+    }
+
+    if(list == aux_node1) {
+        list = new_node;
+    } else {
+        aux_node2->after = new_node;
+    }
+
+    new_node->after = aux_node1;    
 }
 
 template <class T>
-void Simple<T>::setIndex(int index)
+void show(SimpleList<T> *list) 
 {
-    index = this->index;
-}
+    SimpleList<T> *current = new SimpleList<T>();
+    current = list;
 
-template <class T>
-void Simple<T>::setAfter(T after)
-{
-    after = this->after;
-}
-
-template <class T>
-int Simple<T>::getIndex()
-{
-    return index;
-}
-
-template <class T>
-T Simple<T>::getAfter()
-{
-    return after;
+    while (current != NULL)
+    {
+        cout << current->element << " -> ";
+        current = current->after;  
+    }
+    
 }
