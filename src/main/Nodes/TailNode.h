@@ -6,6 +6,6 @@ template <class T>
 struct TailNode
 {
     T element;
-	DoubleLinkedCircularList* after;
-	DoubleLinkedCircularList* before;
+	TailNode* after;
+	TailNode* before;
 };
