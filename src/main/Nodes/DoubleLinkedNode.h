@@ -1,11 +1,21 @@
+#ifndef NODE_H
+#define NODE_H
+
 #include <iostream>
 
-using namespace::std;
+using namespace std;
 
 template <class T>
-struct DoubleLinkedNode
+class DoubleLinkedNode
 {
-    T element;
-	DoubleLinkedNode* after;
-	DoubleLinkedNode* before;
+    public:
+        DoubleLinkedNode();
+        DoubleLinkedNode(T);
+        ~DoubleLinkedNode();
+
+        DoubleLinkedNode *before;
+        DoubleLinkedNode *after;
+        T element;
 };
+
+#endif
