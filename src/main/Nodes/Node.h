@@ -15,9 +15,6 @@ class Node
 
         Node *after;
         T element;
-
-        void delete_all();
-        void print();
 };
 
 #endif
