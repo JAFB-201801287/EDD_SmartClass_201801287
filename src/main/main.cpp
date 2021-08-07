@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "Lists/LinkedList.h"
-#include "Lists/LinkedList.cpp"
+#include "Lists/DoubleLinkedList.h"
+#include "Lists/DoubleLinkedList.cpp"
 
 using namespace std;
-
+//0
 int main() 
 {
-    LinkedList<int> list;
+    DoubleLinkedList<int> list;
 
     list.add(1);
     list.add(2);
@@ -16,6 +16,9 @@ int main()
     list.add(5);
 
     list.print();
+
+    list.delete_id(1);
+    list.delete_node(5);
 
     return 0;
 }
