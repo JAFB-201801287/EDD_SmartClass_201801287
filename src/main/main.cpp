@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "Lists/DoubleLinkedList.h"
-#include "Lists/DoubleLinkedList.cpp"
+#include "Lists/CircularDoubleLinkedList.h"
+#include "Lists/CircularDoubleLinkedList.cpp"
 
 using namespace std;
-//0
+//3
 int main() 
 {
-    DoubleLinkedList<int> list;
+    CircularDoubleLinkedList<int> list;
 
     list.add(1);
     list.add(2);
@@ -17,8 +17,9 @@ int main()
 
     list.print();
 
-    list.delete_id(1);
-    list.delete_node(5);
+    list.delete_node(1);
+
+    list.print();
 
     return 0;
 }
