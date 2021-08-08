@@ -1,6 +1,6 @@
 #include "Node.h"
 
-// Constructor por defecto
+// CONSTRUCTOR VACIO
 template<typename T>
 Node<T>::Node()
 {
@@ -8,7 +8,7 @@ Node<T>::Node()
     after = NULL;
 }
 
-// Constructor por parámetro
+// CONSTRUCTOR CON PARAMENTROS
 template<typename T>
 Node<T>::Node(T element_)
 {
@@ -16,5 +16,6 @@ Node<T>::Node(T element_)
     after = NULL;
 }
 
+// DESTRUCTOR
 template<typename T>
 Node<T>::~Node() {}
