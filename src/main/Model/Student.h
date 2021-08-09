@@ -16,10 +16,11 @@ class Student
         string password;
         short int credits;
         short int age;
+        string mail;
 
     public:
         Student();
-        Student(int, string, string, string, string, short int, short int);
+        Student(int, string, string, string, string, short int, short int, string);
         ~Student();
 
         // SETTERS
@@ -30,6 +31,7 @@ class Student
         void setPassword(string);
         void setCredits(short int);
         void setAge(short int);
+        void setMail(string);
 
         // GETTERS
         int getCarne();
@@ -39,6 +41,7 @@ class Student
         string getPassword();
         short int getCredits();
         short int getAge();
+        string getMail();
 };
 
 #endif

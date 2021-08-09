@@ -1,5 +1,5 @@
 #include "Student.h"
-
+//Carnet,DPI,Nombre,Carrera,Password,Creditos,Edad,Correo
 // CONSTRUCTOR VACIO
 Student::Student()
 {
@@ -10,10 +10,11 @@ Student::Student()
         this->password = "";
         this->credits = 0;
         this->age = 0;
+        this->mail = "";
 }
 
 // CONSTRUCTOR CON PARAMENTROS
-Student::Student(int carne, string dpi, string name, string career, string password, short int credits, short int age)
+Student::Student(int carne, string dpi, string name, string career, string password, short int credits, short int age, string mail)
 {
         this->carne = carne;
         this->dpi = dpi;
@@ -22,6 +23,7 @@ Student::Student(int carne, string dpi, string name, string career, string passw
         this->password = password;
         this->credits = credits;
         this->age = age;
+        this->mail = mail;
 }
 
 // DESTRUCTOR
@@ -64,6 +66,11 @@ void Student::setAge(short int age)
         this->age = age;
 }
 
+void Student::setMail(string mail) 
+{
+        this->mail = mail;
+}
+
 // GETTERS ----------------------------------------------------------------------------------------------------------------------
 
 int Student::getCarne() 
@@ -99,4 +106,9 @@ short int Student::getCredits()
 short int Student::getAge() 
 {
         return this->age;
+}
+
+string Student::getMail() 
+{
+        return this->mail;
 }

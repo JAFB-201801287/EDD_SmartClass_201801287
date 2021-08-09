@@ -13,7 +13,7 @@ template <class T>
 
 class CircularDoubleLinkedList
 {
-    public:
+    protected:
         CircularDoubleLinkedList();
         ~CircularDoubleLinkedList();
 
@@ -22,7 +22,6 @@ class CircularDoubleLinkedList
         void print_pos();
         void delete_node(T);
 
-    private:
         DoubleLinkedNode<T> *first;
         int index;
 };

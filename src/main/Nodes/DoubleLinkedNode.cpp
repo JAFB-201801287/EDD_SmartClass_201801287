@@ -4,7 +4,7 @@
 template<typename T>
 DoubleLinkedNode<T>::DoubleLinkedNode()
 {
-    element = 0;
+    //element = NULL;
     before = NULL;
     after = NULL;
 }
