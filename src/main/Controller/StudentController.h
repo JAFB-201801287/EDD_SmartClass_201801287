@@ -29,10 +29,12 @@ class StudentController: public CircularDoubleLinkedList<Student>
         Student find_student(string);
 
         void add_student(string, string, string, string, string, string, string, string);
+        void add_student1(string);
         void update_student(string, string, string, string, string, string, string, string);
         void delete_student(string);
         void print_student();
         void massive_charge(string path);
+        void report_student();
 };
 
 #endif

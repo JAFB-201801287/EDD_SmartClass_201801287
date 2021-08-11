@@ -142,6 +142,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setCarne(stoi(carne));
     } else {
+        cout << "ERROR CARNE." << endl;
         flag = false;
     }
 
@@ -149,6 +150,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setDpi(dpi);
     } else {
+        cout << "ERROR DPI." <<endl;
         flag = false;
     }
 
@@ -156,6 +158,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setMail(mail);
     } else {
+        cout << "ERROR CORREO" << endl;
         flag = false;
     }
    
@@ -171,6 +174,13 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     } else {
         cout << "ERROR NO SE LOGRO INGRESAR EL ESTUDIANTE." << endl;
     }
+}
+
+void StudentController::add_student1(string line) 
+{
+    string *elements = split(line);
+    cout << elements[0] << "," << elements[1] << "," << elements[2] << "," << elements[3] << "," << elements[4] << ","  << elements[5] << "," << elements[6] << "," << elements[7] << endl;
+    this->add_student(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], elements[6], elements[7]);
 }
 
 void StudentController::update_student(string dpi, string carne  = "", string name  = "", string career = "", string password = "", string credits = "", string age = "", string mail = "") 
@@ -240,6 +250,7 @@ void StudentController::delete_student(string dpi)
     DoubleLinkedNode<Student> *current = first;
     DoubleLinkedNode<Student> *next = first->after;
     DoubleLinkedNode<Student> *last = first->before;
+    bool flag = false;
 
     if(first->element.getDpi() == dpi) 
     {
@@ -247,14 +258,18 @@ void StudentController::delete_student(string dpi)
         first = current->after;
         last->after = first;
         first->before = last;
+
+        flag = true;
     }
     else if(last->element.getDpi() == dpi) 
     {
-        cout << "ELEMENTO ELIMINADO: " << last->element.getDpi() << ", ELEMENTO ANTERIOR: " << last->before->element.getDpi() << ", ELEMENTO SOGUIENTE: " << last->after->element.getDpi() << endl;
-        cout << endl;
+        //cout << "ELEMENTO ELIMINADO: " << last->element.getDpi() << ", ELEMENTO ANTERIOR: " << last->before->element.getDpi() << ", ELEMENTO SOGUIENTE: " << last->after->element.getDpi() << endl;
+        //cout << endl;
         last->before->after = first;
         first->before = last->before;
         delete last;
+
+        flag = true;
     }else {
         do
         {
@@ -267,10 +282,19 @@ void StudentController::delete_student(string dpi)
                 delete aux_node2;
                 index--;
                 current = first;
+
+                flag = true;
             }
             current = current->after;
             next = next->after;
         } while (current != first);
+    }
+
+    if(flag) 
+    {
+        cout << " SE ELIMINO EL ELEMENTO." << endl;
+    } else {
+        cout << " ERROR NO SE LOGRO ENCONTRAR EL ELEMENTO." << endl;
     }
 }
 
@@ -299,6 +323,60 @@ void StudentController::massive_charge(string path)
     }
 }
 
+void StudentController::report_student() 
+{
+    int id = 0;
+    ofstream file;
+    string diagram = "\tgraph [\n\t\trankdir = \"LR\"\n\t];\n\n\tnode [\n\t\tfontsize = \"16\"\n\t\tshape = \"ellipse\"\n\t];\n\n\tedge [\n\t];\n\n";
+    Student student;
+    DoubleLinkedNode<Student> *current = new DoubleLinkedNode<Student>();
+    DoubleLinkedNode<Student> *temp = first;
+	current = first;
+
+	if(first != NULL){
+		do{
+            //cout << current->element.getCarne() << "," << current->element.getDpi() << "," << current->element.getName() << "," << current->element.getCareer() << "," << current->element.getPassword() << ","  << current->element.getCredits() << "," << current->element.getAge() << "," << current->element.getMail() << endl;
+            
+            diagram += "\t\"" + current->element.getDpi() + "\" [\n";
+            diagram += "\t\tlabel = \"<f0> CARNE: " + to_string(current->element.getCarne()) + "| ";
+            diagram += "<f1> DPI: " + current->element.getDpi() +"| ";
+            diagram += "<f2> NOMBRE: " + current->element.getName() + "| ";
+            diagram += "<f3> CARRERA: " + current->element.getCareer() + "| ";
+            diagram += "<f4> PASSWORD: " + current->element.getPassword() + "| ";
+            diagram += "<f5> CREDITOS: " + to_string(current->element.getCredits()) + "| ";
+            diagram += "<f6> EDAD: " + to_string(current->element.getAge()) + "| ";
+            diagram += "<f7> CORREO ELECTRONICO: " + current->element.getMail() + "\"\n";
+            diagram += "\tshape = \"record\"\n\t];\n\n";
+
+            diagram += "\t\"" + current->element.getDpi() + "\":f4 -> \"" + current->before->element.getDpi() + "\":f4 [\n";
+            diagram += "\t\tid = " + to_string(id) + "\n\t];\n\n";
+            id++;
+
+            diagram += "\t\"" + current->element.getDpi() + "\":f3 -> \"" + current->after->element.getDpi() + "\":f3 [\n";
+            diagram += "\t\tid = " + to_string(id) + "\n\t];\n\n";
+            id++;
+
+			current = current->after;
+		} while(current!=first);
+	}else{
+		cout << "\nLISTA VACIA\n";
+	}
+
+    diagram = "digraph g {\n" + diagram + "}";
+
+    file.open("StudentReport.dot", ios::out);
+
+    if(file.fail()) 
+    {
+        cout << "NO SE ENCONTRO EL ARCHIVO" << endl;
+    } else {
+        file << diagram;
+        system("dot -Tpng -o StudentReport.png StudentReport.dot");
+        system("mimeopen -d StudentReport.png");
+    }
+
+    file.close();
+} 
 
 bool StudentController::is_email_valid(string& email)
 {
