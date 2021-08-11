@@ -4,11 +4,12 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include <sstream>
+#include <fstream>
 
-#include "../Model/Student.h"
 #include "../Model/Student.cpp"
 #include "../Lists/CircularDoubleLinkedList.cpp"
-#include <sstream>
+
 
 using namespace std;
 
@@ -18,6 +19,7 @@ class StudentController: public CircularDoubleLinkedList<Student>
         static StudentController* instance;
         string* split(string);
         string replace(string);
+        string remove_line_breaks(string);
         bool is_email_valid(string&);
     public:
         StudentController();
@@ -30,7 +32,7 @@ class StudentController: public CircularDoubleLinkedList<Student>
         void update_student(string, string, string, string, string, string, string, string);
         void delete_student(string);
         void print_student();
-        void massive_charge();
+        void massive_charge(string path);
 };
 
 #endif

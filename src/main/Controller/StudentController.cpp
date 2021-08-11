@@ -48,10 +48,35 @@ string StudentController::replace(string line)
     int start = 0;
     int end1 = 0;
     bool flag = true;
-    const regex pattern("\\w");
     for (int i = 0; i <= line.length(); i++)
     {
         if((line[i] == '\r') || (line[i] == ' ')) 
+        {
+            end1 = i;
+            flag = false;
+            i = line.length();
+        }
+    }
+
+    if(flag) 
+    {
+        elements = line;
+    } else {
+        elements = line.substr(start, end1);
+        
+    } 
+    return elements; 
+}
+
+string StudentController::remove_line_breaks(string line) 
+{
+    string elements = "";
+    int start = 0;
+    int end1 = 0;
+    bool flag = true;
+    for (int i = 0; i <= line.length(); i++)
+    {
+        if((line[i] == '\r')) 
         {
             end1 = i;
             flag = false;
@@ -249,21 +274,28 @@ void StudentController::delete_student(string dpi)
     }
 }
 
-void StudentController::massive_charge() 
+void StudentController::massive_charge(string path) 
 {
-    ifstream file("/home/jafb/Documents/PROYECTS/C++ PROYECTS/EDD_SmartClass_201801287/ARCHIVOS DE PRUEBA/Estudiantes.csv", ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Error" << endl;
-    } else {
-        string line;
-        getline(file, line);
-        while (getline(file, line))
-        {//Carnet,DPI,Nombre,Carrera,Password,Creditos,Edad,Correo
-            string *elements = split(line);
-            //cout << elements[0] << "," << elements[1] << "," << elements[2] << "," << elements[3] << "," << elements[4] << ","  << elements[5] << "," << elements[6] << "," << elements[7] << endl;
-            this->add_student(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], elements[6], elements[7]);
+        ifstream file(path, ios::in);
+        if (!file.is_open())
+        {
+            cout << " ERROR ARCHIVO NO ENCONTRADO." << endl;
+        } else {
+            string line;
+            getline(file, line);
+            while (getline(file, line))
+            {
+                string *elements = split(line);
+                cout << elements[0] << "," << elements[1] << "," << elements[2] << "," << elements[3] << "," << elements[4] << ","  << elements[5] << "," << elements[6] << "," << elements[7] << endl;
+                this->add_student(elements[0], elements[1], elements[2], elements[3], elements[4], elements[5], elements[6], elements[7]);
+            }
         }
+    }
+    catch(std::ifstream::failure e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
