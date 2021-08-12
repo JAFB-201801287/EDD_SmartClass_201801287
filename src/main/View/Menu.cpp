@@ -25,19 +25,14 @@ void Menu::clear()
 string Menu::scanner()
 {
     string temp = "";
-    char a[100];
-    if(cin_bool) 
-    {
-        cin.clear();
-        cin.sync();
-        cin_bool = false;
-        cin.ignore(); 
-    } else {
-        cin.getline(a, 100);
-        cin_bool = true;
-    }
-    getline(cin, temp); 
+    char c[9000];
+    cin.clear();
+    cin.sync();
+    cin.ignore(); 
 
+    //getline(cin, temp); 
+    scanf("%[^\n]" ,c);
+    temp += c;
     return temp;
 }
 
@@ -77,12 +72,64 @@ void Menu::print_manual_options(string title)
     cout << " ************************************************************************************" << endl;
     cout << " *                                       MENU                                       *" << endl;
     cout << " ************************************************************************************" << endl;
-    cout << "   " << title << endl;
+    cout << " *  " << title << endl;
     cout << " ************************************************************************************" << endl;
     cout << " |      1) AGREGAR                                                                  |" << endl;
     cout << " |      2) EDITAR                                                                   |" << endl;
     cout << " |      3) ELIMINAR                                                                 |" << endl;
     cout << " |      4) REGRESAR                                                                 |" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " ************************************************************************************" << endl;
+}
+
+void Menu::print_menu_manual_options() 
+{
+    cout << " ************************************************************************************" << endl;
+    cout << " *                                       MENU                                       *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " *  INGRESO MANUAL                                                                  *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " |      1) USUARIOS                                                                 |" << endl;
+    cout << " |      2) TAREAS                                                                   |" << endl;
+    cout << " |      3) REGRESAR                                                                 |" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " ************************************************************************************" << endl;
+}
+
+void Menu::print_report_options() 
+{
+    cout << " ************************************************************************************" << endl;
+    cout << " *                                       MENU                                       *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " *  REPORTES                                                                        *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " |      1) REPORTE SOBRE LA LISTA DE ESTUDIANTES                                    |" << endl;
+    cout << " |      2) REPORTE SOBRE LA LISTA DE TAREAS LINEALIZADA                             |" << endl;
+    cout << " |      3) BUSQUEDA EN ESTRUTURA LINEALIZADA                                        |" << endl;
+    cout << " |      4) BUSQUEDA DE POSICION EN LISTA LINEALIZADA                                |" << endl;
+    cout << " |      5) COLA DE ERRORES                                                          |" << endl;
+    cout << " |      6) CODIGO GENERADO DE SALIDA                                                |" << endl;
+    cout << " |      7) REGRESAR                                                                 |" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " ************************************************************************************" << endl;
+}
+
+
+void Menu::print_menu_update() 
+{
+    cout << " ************************************************************************************" << endl;
+    cout << " *                                       MENU                                       *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " *  ACTUALIZAR DATOS DEL USUARIO                                                    *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " |      1) CARNE                                                                    |" << endl;
+    cout << " |      2) NOMBRE                                                                   |" << endl;
+    cout << " |      3) CARRERA                                                                  |" << endl;
+    cout << " |      4) PASSWORD                                                                 |" << endl;
+    cout << " |      5) CREDITOS                                                                 |" << endl;
+    cout << " |      6) EDAD                                                                     |" << endl;
+    cout << " |      7) CORREO                                                                   |" << endl;
+    cout << " |      8) REGRESAR                                                                 |" << endl;
     cout << " ************************************************************************************" << endl;
     cout << " ************************************************************************************" << endl;
 }
@@ -111,10 +158,10 @@ void Menu::view_menu()
                 cout << " OPCION 2" << endl;
                 break;
             case '3':
-                view_manual_users();
+                print_menu_manual();
                 break;
             case '4':
-                studentController->report_student();
+                print_menu_report();
                 break;
             case '5':
                 cout << " OPCION 5" << endl;
@@ -128,6 +175,43 @@ void Menu::view_menu()
 
     } while (flag);
 }
+
+void Menu::print_menu_manual()
+{
+    bool flag = true;
+    char option;
+    do
+    {
+        clear();
+        cout << endl;
+        print_info();
+        cout << endl;
+        print_menu_manual_options();
+        cout << "\n INGRESE EL NUMERO DE LA OPCION: ";
+        cin >> option;
+        cout << " ____________________________________________________________________________________" << endl;
+
+        switch (option)
+        {
+            case '1':
+                view_manual_users();
+                this->stop();
+                break;
+            case '2':
+
+                this->stop();
+                break;
+            case '3':
+                flag = false;
+                break;
+            default:
+                cout << " ERROR OPCION INGRESADA NO VALIDA." << endl;
+                break;
+        }
+
+    } while (flag);
+}
+
 
 void Menu::view_manual_users()
 {
@@ -153,7 +237,7 @@ void Menu::view_manual_users()
                 this->stop();
                 break;
             case '2':
-                cout << " OPCION 2" << endl;
+                menu_update();
                 this->stop();
                 break;
             case '3':
@@ -172,16 +256,87 @@ void Menu::view_manual_users()
     } while (flag);
 }
 
+void Menu::print_menu_report()
+{
+    bool flag = true;
+    char option;
+    do
+    {
+        clear();
+        cout << endl;
+        print_info();
+        cout << endl;
+        print_report_options();
+        cout << "\n INGRESE EL NUMERO DE LA OPCION: ";
+        cin >> option;
+        cout << " ____________________________________________________________________________________" << endl;
+
+        switch (option)
+        {
+            case '1':
+                studentController->report_student();
+                this->stop();
+                break;
+            case '2':
+
+                this->stop();
+                break;
+            case '3':
+
+                this->stop();
+                break;
+            case '4':
+
+                this->stop();
+                break;
+            case '5':
+
+                this->stop();
+                break;
+            case '6':
+
+                this->stop();
+                break;
+            case '7':
+                flag = false;
+                break;
+            default:
+                cout << " ERROR OPCION INGRESADA NO VALIDA." << endl;
+                break;
+        }
+
+    } while (flag);
+}
+
 void Menu::create_user() 
 {
-    string line = "";
+    string carne;
+    string dpi; 
+    string name; 
+    string career; 
+    string password; 
+    string credits; 
+    string age; 
+    string mail;
 
-    cout << " (CARNET,DPI,NOMBRE,CARRERA,PASSWORD,CREDITOS,EDAD,CORREO)" << endl;
-    cout << " ESCRIBA CON EL SIGUIENTE FORMATO PARA INGRESAR EL USUARIO: \n ";
-    
-    line = scanner();
-    
-    studentController->add_student1(line); 
+    cout << " CARNET: ";
+    carne = scanner();
+    cout << " DPI: ";
+    dpi = scanner();
+    cout << " NOMBRE: ";
+    name = scanner();
+    cout << " CARRERA: ";
+    career = scanner();
+    cout << " PASSWORD: ";
+    password = scanner();
+    cout << " CREDITOS: ";
+    credits = scanner();
+    cout << " EDAD: ";
+    age = scanner();
+    cout << " CORREO: ";
+    mail = scanner();
+
+    studentController->add_student(carne, dpi, name, career, password, credits, age, mail);
 } 
 
 void Menu::user_load() 
@@ -196,5 +351,93 @@ void Menu::user_load()
 
 void Menu::remove_user(string dpi) 
 {
-    studentController->delete_student(dpi); 
+    string option = "";
+    cout << " DECEA ELIMINAR AL USUARIO (s/n): ";
+    option = scanner();
+    if(option == "s") 
+    {
+        studentController->delete_student(dpi);
+    }
+     
 } 
+
+void Menu::menu_update()
+{
+    bool flag = true;
+    char option;
+
+    string carne;
+    string dpi; 
+    string name; 
+    string career; 
+    string password; 
+    string credits; 
+    string age; 
+    string mail;
+
+    cout << " INGRESE NUMERO DE DPI DEL USUARIO: ";
+    dpi = scanner();
+
+    if(studentController->find_student(dpi).getDpi() != "") 
+    {
+        do
+        {
+            clear();
+            cout << endl;
+            print_info();
+            cout << endl;
+            print_menu_update();
+            cout << "\n INGRESE EL NUMERO DE LA OPCION: ";
+            cin >> option;
+            cout << " ____________________________________________________________________________________" << endl;
+
+            switch (option)
+            {
+                case '1':
+                    cout << " CARNET: ";
+                    carne = scanner();
+                    this->stop();
+                    break;
+                case '2':
+                    cout << " NOMBRE: ";
+                    name = scanner();
+                    this->stop();
+                    break;
+                case '3':
+                    cout << " CARRERA: ";
+                    career = scanner();
+                    this->stop();
+                    break;
+                case '4':
+                    cout << " PASSWORD: ";
+                    password = scanner();
+                    this->stop();
+                    break;
+                case '5':
+                    cout << " CREDITOS: ";
+                    credits = scanner();
+                    this->stop();
+                    break;
+                case '6':
+                    cout << " EDAD: ";
+                    age = scanner();
+                    this->stop();
+                    break;
+                case '7':
+                    cout << " CORREO: ";
+                    mail = scanner();
+                    this->stop();
+                    break;
+                case '8':
+                    flag = false;
+                    break;
+                default:
+                    cout << " ERROR OPCION INGRESADA NO VALIDA." << endl;
+                    break;
+            }
+        } while (flag);
+    } else {
+        cout << " USUARIO NO ENCONTRADO.\n";
+    }
+    studentController->update_student(dpi, carne, name, career, password, credits, age, mail);
+}

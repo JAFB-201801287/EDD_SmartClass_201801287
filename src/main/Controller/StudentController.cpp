@@ -127,7 +127,7 @@ Student StudentController::find_student(string dpi)
 			current = current->after;
 		} while(current!=first);
 	}else{
-		cout << "\nLISTA VACIA\n";
+		cout << "\n LISTA VACIA\n";
 	}
 
     return student;
@@ -142,7 +142,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setCarne(stoi(carne));
     } else {
-        cout << "ERROR CARNE." << endl;
+        cout << " ERROR CARNE." << endl;
         flag = false;
     }
 
@@ -150,7 +150,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setDpi(dpi);
     } else {
-        cout << "ERROR DPI." <<endl;
+        cout << " ERROR DPI." <<endl;
         flag = false;
     }
 
@@ -158,7 +158,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setMail(mail);
     } else {
-        cout << "ERROR CORREO" << endl;
+        cout << " ERROR CORREO" << endl;
         flag = false;
     }
    
@@ -170,9 +170,9 @@ void StudentController::add_student(string carne, string dpi, string name, strin
         student.setCredits(stoi(credits));
         student.setAge(stoi(age));
         add(student);
-        cout << "SE INGRESO LA INFORMACION DEL ESTUDIANTE." << endl;
+        cout << " SE INGRESO LA INFORMACION DEL ESTUDIANTE." << endl;
     } else {
-        cout << "ERROR NO SE LOGRO INGRESAR EL ESTUDIANTE." << endl;
+        cout << " ERROR NO SE LOGRO INGRESAR EL ESTUDIANTE." << endl;
     }
 }
 
@@ -200,7 +200,7 @@ void StudentController::update_student(string dpi, string carne  = "", string na
                     {
                         current->element.setCarne(stoi(carne));
                     } else {
-                        cout << "ERROR CARNE SOLO ACEPTA 9 DIGITOS" << endl;
+                        cout << " ERROR CARNE SOLO ACEPTA 9 DIGITOS" << endl;
                     }  
                 }
 
@@ -229,7 +229,7 @@ void StudentController::update_student(string dpi, string carne  = "", string na
                     {
                         current->element.setMail(mail);
                     } else {
-                        cout << "ERROR FORMATO DE CORREO." << endl;
+                        cout << " ERROR FORMATO DE CORREO." << endl;
                     }
                 }
             }

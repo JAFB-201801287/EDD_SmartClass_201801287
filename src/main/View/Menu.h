@@ -20,6 +20,12 @@ class Menu
         void print_info();
         void print_menu_options();
         void print_manual_options(string);
+        void print_report_options();
+        void print_menu_report();
+        void print_menu_manual_options();
+        void print_menu_manual();
+        void print_menu_update();
+        void menu_update();
         void user_load();
         void create_user();
         void remove_user(string);
