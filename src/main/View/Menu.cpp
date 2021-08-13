@@ -4,6 +4,7 @@
 Menu::Menu()
 {
     studentController = StudentController::getInstance();
+    homeworkController = HomeworkController::getInstance();
     cin_bool = true;
 }
 
@@ -115,7 +116,7 @@ void Menu::print_report_options()
 }
 
 
-void Menu::print_menu_update() 
+void Menu::print_menu_update_student() 
 {
     cout << " ************************************************************************************" << endl;
     cout << " *                                       MENU                                       *" << endl;
@@ -130,6 +131,24 @@ void Menu::print_menu_update()
     cout << " |      6) EDAD                                                                     |" << endl;
     cout << " |      7) CORREO                                                                   |" << endl;
     cout << " |      8) REGRESAR                                                                 |" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " ************************************************************************************" << endl;
+}
+
+void Menu::print_menu_update_homework() 
+{
+    cout << " ************************************************************************************" << endl;
+    cout << " *                                       MENU                                       *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " *  ACTUALIZAR DATOS DE LA TAREA                                                    *" << endl;
+    cout << " ************************************************************************************" << endl;
+    cout << " |      1) CARNE                                                                    |" << endl;
+    cout << " |      2) NOMBRE                                                                   |" << endl;
+    cout << " |      3) DESCRIPCION                                                              |" << endl;
+    cout << " |      4) MATERIA                                                                  |" << endl;
+    cout << " |      5) FECHA                                                                    |" << endl;
+    cout << " |      6) ESTADO                                                                   |" << endl;
+    cout << " |      7) REGRESAR                                                                 |" << endl;
     cout << " ************************************************************************************" << endl;
     cout << " ************************************************************************************" << endl;
 }
@@ -155,7 +174,7 @@ void Menu::view_menu()
                 user_load();
                 break;
             case '2':
-                cout << " OPCION 2" << endl;
+                homework_load();
                 break;
             case '3':
                 print_menu_manual();
@@ -164,7 +183,6 @@ void Menu::view_menu()
                 print_menu_report();
                 break;
             case '5':
-                cout << " OPCION 5" << endl;
                 flag = false;
                 break;
             default:
@@ -198,7 +216,7 @@ void Menu::print_menu_manual()
                 this->stop();
                 break;
             case '2':
-
+                view_manual_homeworks();
                 this->stop();
                 break;
             case '3':
@@ -256,6 +274,48 @@ void Menu::view_manual_users()
     } while (flag);
 }
 
+void Menu::view_manual_homeworks()
+{
+    string dpi = "";
+
+    bool flag = true;
+    char option;
+    do
+    {
+        clear();
+        cout << endl;
+        print_info();
+        cout << endl;
+        print_manual_options("INGRESO MANUAL DE TAREAS.");
+        cout << "\n INGRESE EL NUMERO DE LA OPCION: ";
+        cin >> option;
+        cout << " ____________________________________________________________________________________" << endl;
+
+        switch (option)
+        {
+            case '1':
+                create_homework();
+                this->stop();
+                break;
+            case '2':
+                view_update_homework();
+                this->stop();
+                break;
+            case '3':
+                remove_homework();
+                this->stop();
+                break;
+            case '4':
+                flag = false;
+                break;
+            default:
+                cout << " ERROR OPCION INGRESADA NO VALIDA." << endl;
+                break;
+        }
+
+    } while (flag);
+}
+
 void Menu::print_menu_report()
 {
     bool flag = true;
@@ -278,15 +338,15 @@ void Menu::print_menu_report()
                 this->stop();
                 break;
             case '2':
-
+                homeworkController->report_homework();
                 this->stop();
                 break;
             case '3':
-
+                search_struct_homework();
                 this->stop();
                 break;
             case '4':
-
+                search_position_homework();
                 this->stop();
                 break;
             case '5':
@@ -339,6 +399,47 @@ void Menu::create_user()
     studentController->add_student(carne, dpi, name, career, password, credits, age, mail);
 } 
 
+void Menu::create_homework() 
+{
+    int month = 0;
+    int day = 0;
+    int hour = 0;
+
+    Homework homework;
+
+    cout << " MES: ";
+    month = stoi(scanner());
+    homework.setMonth(month);
+
+    cout << " DIA: ";
+    day = stoi(scanner());
+    homework.setDay(day);
+
+    cout << " HORA: ";
+    hour = stoi(scanner());
+    homework.setHour(hour);
+
+    cout << " CARNE: ";
+    homework.setCarne(stoi(scanner()));
+
+    cout << " NOMBRE: ";
+    homework.setName(scanner());
+
+    cout << " DESCRIPCION: ";
+    homework.setDescription(scanner());
+
+    cout << " MATERIA: ";
+    homework.setMatter(scanner());
+
+    cout << " FECHA: ";
+    homework.setDate(scanner());
+
+    cout << " ESTADO (Pendiente, Realizado, Incumplido): ";
+    homework.setState(scanner());
+
+    homeworkController->add_matriz(homework, month, day, hour); 
+} 
+
 void Menu::user_load() 
 {
     string path;
@@ -348,6 +449,86 @@ void Menu::user_load()
     studentController->massive_charge(path);
     cout << " ____________________________________________________________________________________" << endl;
 }
+
+void Menu::remove_homework() 
+{
+    int month = 0;
+    int day = 0;
+    int hour = 0;
+
+    cout << " MES: ";
+    month = stoi(scanner());
+
+    cout << " DIA: ";
+    day = stoi(scanner());
+
+    cout << " HORA: ";
+    hour = stoi(scanner());
+
+    homeworkController->delete_homework(month, day, hour);
+}
+
+void Menu::homework_load() 
+{
+    string path;
+    cout << " INGRESE LA RUTA DEL ARCHIVO DE TAREAS: ";
+    path = scanner();
+    cout << endl;
+    homeworkController->massive_charge(path);
+    cout << " ____________________________________________________________________________________" << endl;
+}
+
+void Menu::search_struct_homework() 
+{
+    int month = 0;
+    int day = 0;
+    int hour = 0;
+
+    cout << " MES: ";
+    month = stoi(scanner());
+
+    cout << " DIA: ";
+    day = stoi(scanner());
+
+    cout << " HORA: ";
+    hour = stoi(scanner());
+    cout << endl;
+    cout << " ____________________________________________________________________________________" << endl;
+    Homework homework = homeworkController->find_homework(month, day, hour);
+    cout << endl;
+    cout << " ID: " << homework.getId() << endl;
+    cout << " CARNE: " << homework.getCarne() << endl;
+    cout << " NOMBRE: " << homework.getName() << endl;
+    cout << " DESCRIPCION: " << homework.getDescription() << endl;
+    cout << " MATERIA: " << homework.getMatter() << endl;
+    cout << " FECHA: " << homework.getDate() << endl;
+    cout << " ESTADO: " << homework.getState() << endl;
+}
+
+void Menu::search_position_homework() 
+{
+    int month = 0;
+    int day = 0;
+    int hour = 0;
+
+    cout << " MES: ";
+    month = stoi(scanner());
+
+    cout << " DIA: ";
+    day = stoi(scanner());
+
+    cout << " HORA: ";
+    hour = stoi(scanner());
+    cout << endl;
+    cout << " ____________________________________________________________________________________" << endl;
+    cout << endl;
+    if(!homeworkController->position_homework(month, day, hour)) 
+    {
+        cout << " TAREA NO ENCONTRADA.";
+    }
+
+}
+
 
 void Menu::remove_user(string dpi) 
 {
@@ -386,7 +567,7 @@ void Menu::menu_update()
             cout << endl;
             print_info();
             cout << endl;
-            print_menu_update();
+            print_menu_update_student();
             cout << "\n INGRESE EL NUMERO DE LA OPCION: ";
             cin >> option;
             cout << " ____________________________________________________________________________________" << endl;
@@ -440,4 +621,80 @@ void Menu::menu_update()
         cout << " USUARIO NO ENCONTRADO.\n";
     }
     studentController->update_student(dpi, carne, name, career, password, credits, age, mail);
+}
+
+void Menu::view_update_homework()
+{
+    bool flag = true;
+    char option;
+
+    int id = 0;
+    string carne;
+    string name; 
+    string description; 
+    string matter; 
+    string date; 
+    string state; 
+
+    cout << " INGRESE NUMERO DE ID DE LA TAREA: ";
+    id = stoi(scanner());
+
+    if(homeworkController->find_homework(id)) 
+    {
+        do
+        {
+            clear();
+            cout << endl;
+            print_info();
+            cout << endl;
+            print_menu_update_homework();
+            cout << "\n INGRESE EL NUMERO DE LA OPCION: ";
+            cin >> option;
+            cout << " ____________________________________________________________________________________" << endl;
+
+            switch (option)
+            {
+                case '1':
+                    cout << " CARNET: ";
+                    carne = scanner();
+                    this->stop();
+                    break;
+                case '2':
+                    cout << " NOMBRE: ";
+                    name = scanner();
+                    this->stop();
+                    break;
+                case '3':
+                    cout << " DESCRIPCION: ";
+                    description = scanner();
+                    this->stop();
+                    break;
+                case '4':
+                    cout << " MATERIA: ";
+                    matter = scanner();
+                    this->stop();
+                    break;
+                case '5':
+                    cout << " FECHA: ";
+                    date = scanner();
+                    this->stop();
+                    break;
+                case '6':
+                    cout << " ESTADO (Pendiente, Realizado, Incumplido): ";
+                    state = scanner();
+                    this->stop();
+                    break;
+                case '7':
+                    flag = false;
+                    homeworkController->update_homework(id, name, description, matter, date, state);
+                    break;
+                default:
+                    cout << " ERROR OPCION INGRESADA NO VALIDA." << endl;
+                    break;
+            }
+        } while (flag);
+    } else {
+        cout << " ID DE TAREA NO ENCONTRADO.\n";
+    }
+
 }

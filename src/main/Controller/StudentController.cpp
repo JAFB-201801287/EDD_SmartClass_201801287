@@ -3,7 +3,7 @@
 // CONSTRUCTOR VACIO
 StudentController::StudentController()
 {
-
+    this->id_report = 0;
 }
 
 StudentController* StudentController::instance = 0;
@@ -133,6 +133,25 @@ Student StudentController::find_student(string dpi)
     return student;
 }
 
+bool StudentController::find_student(int carne) 
+{
+    Student student;
+    DoubleLinkedNode<Student> *current = new DoubleLinkedNode<Student>();
+	current = first;
+
+	if(first != NULL){
+		do{
+            if(current->element.getCarne() == carne) 
+            {
+                return true;
+            }
+			current = current->after;
+		} while(current!=first);
+	}
+    
+    return false;
+}
+
 void StudentController::add_student(string carne, string dpi, string name, string career, string password, string credits, string age, string mail) 
 {
     Student student;
@@ -174,6 +193,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     } else {
         cout << " ERROR NO SE LOGRO INGRESAR EL ESTUDIANTE." << endl;
     }
+    cout << endl;
 }
 
 void StudentController::add_student1(string line) 
@@ -335,7 +355,7 @@ void StudentController::report_student()
 
 	if(first != NULL){
 		do{
-            //cout << current->element.getCarne() << "," << current->element.getDpi() << "," << current->element.getName() << "," << current->element.getCareer() << "," << current->element.getPassword() << ","  << current->element.getCredits() << "," << current->element.getAge() << "," << current->element.getMail() << endl;
+            cout << current->element.getCarne() << "," << current->element.getDpi() << "," << current->element.getName() << "," << current->element.getCareer() << "," << current->element.getPassword() << ","  << current->element.getCredits() << "," << current->element.getAge() << "," << current->element.getMail() << endl;
             
             diagram += "\t\"" + current->element.getDpi() + "\" [\n";
             diagram += "\t\tlabel = \"<f0> CARNE: " + to_string(current->element.getCarne()) + "| ";
@@ -348,11 +368,11 @@ void StudentController::report_student()
             diagram += "<f7> CORREO ELECTRONICO: " + current->element.getMail() + "\"\n";
             diagram += "\tshape = \"record\"\n\t];\n\n";
 
-            diagram += "\t\"" + current->element.getDpi() + "\":f4 -> \"" + current->before->element.getDpi() + "\":f4 [\n";
+            diagram += "\t\"" + current->element.getDpi() + "\":f3 -> \"" + current->after->element.getDpi() + "\":f3 [\n";
             diagram += "\t\tid = " + to_string(id) + "\n\t];\n\n";
             id++;
 
-            diagram += "\t\"" + current->element.getDpi() + "\":f3 -> \"" + current->after->element.getDpi() + "\":f3 [\n";
+            diagram += "\t\"" + current->element.getDpi() + "\":f4 -> \"" + current->before->element.getDpi() + "\":f4 [\n";
             diagram += "\t\tid = " + to_string(id) + "\n\t];\n\n";
             id++;
 
@@ -363,16 +383,23 @@ void StudentController::report_student()
 	}
 
     diagram = "digraph g {\n" + diagram + "}";
+    string comando1 = "dot -Tpng -o StudentReport" + to_string(this->id_report) + ".png StudentReport" + to_string(this->id_report) + ".dot";
+    string comando2 = "mimeopen -d StudentReport" + to_string(this->id_report) + ".png";
+    char cmd1[comando1.size() + 1];
+    strcpy(cmd1, comando1.c_str());
+    char cmd2[comando2.size() + 1];
+    strcpy(cmd2, comando2.c_str());
 
-    file.open("StudentReport.dot", ios::out);
+    file.open("StudentReport" + to_string(this->id_report) + ".dot", ios::out);
 
     if(file.fail()) 
     {
         cout << "NO SE ENCONTRO EL ARCHIVO" << endl;
     } else {
         file << diagram;
-        system("dot -Tpng -o StudentReport.png StudentReport.dot");
-        system("mimeopen -d StudentReport.png");
+        system(cmd1);
+        system(cmd2);
+        this->id_report++;
     }
 
     file.close();

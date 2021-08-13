@@ -4,6 +4,9 @@
 Homework::Homework()
 {
     this->id = 0;
+    this->month = 0;
+    this->day = 0;
+    this->hour = 0;
     this->carne = 0;
     this->name = "";
     this->description = "";
@@ -34,6 +37,21 @@ Homework::~Homework() {}
 void Homework::setId(int id) 
 {
         this->id = id;
+}
+
+void Homework::setMonth(int month) 
+{
+        this->month = month;
+}
+
+void Homework::setDay(int day) 
+{
+        this->day = day;
+}
+
+void Homework::setHour(int hour) 
+{
+        this->hour = hour;
 }
 
 void Homework::setCarne(int carne) 
@@ -76,6 +94,21 @@ void Homework::setState(string state)
 int Homework::getId() 
 {
         return this->id;
+}
+
+int Homework::getMonth() 
+{
+        return this->month;
+}
+
+int Homework::getDay() 
+{
+        return this->day;
+}
+
+int Homework::getHour() 
+{
+        return this->hour;
 }
 
 int Homework::getCarne() 

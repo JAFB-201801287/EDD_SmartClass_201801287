@@ -19,15 +19,27 @@ template<typename T>
 void CircularDoubleLinkedList<T>::add(T element_)
 {
     DoubleLinkedNode<T> *new_node = new DoubleLinkedNode<T> (element_);
-    DoubleLinkedNode<T> *temp = first;
     DoubleLinkedNode<T> *last = NULL;
+    DoubleLinkedNode<T> *current = new DoubleLinkedNode<T>();
 
     if(!first) {
         first = new_node;
         last = new_node;
         first->after = first;
-        first->before = last;
+        first->before = first;
     } else {
+        /*do
+        {
+            last = current;
+            current = current->after;
+        } while (current!=first);
+        
+        last->after = new_node;
+        new_node->before = last;
+        new_node->after = first;
+        last = new_node;
+        first->before = last;*/
+
         last = first->before;
         last->after = new_node;
         new_node->before = last;

@@ -16,6 +16,7 @@ using namespace std;
 class StudentController: public CircularDoubleLinkedList<Student>
 {
     private:
+        int id_report;
         static StudentController* instance;
         string* split(string);
         string replace(string);
@@ -27,6 +28,7 @@ class StudentController: public CircularDoubleLinkedList<Student>
         static StudentController* getInstance();
 
         Student find_student(string);
+        bool find_student(int);
 
         void add_student(string, string, string, string, string, string, string, string);
         void add_student1(string);

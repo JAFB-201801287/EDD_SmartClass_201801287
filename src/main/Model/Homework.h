@@ -10,6 +10,9 @@ class Homework
 {
     private:
         int id;
+        int month;
+        int day;
+        int hour;
         int carne;
         string name;
         string description;
@@ -25,6 +28,9 @@ class Homework
 
         // SETTERS
         void setId(int);
+        void setMonth(int);
+        void setDay(int);
+        void setHour(int);
         void setCarne(int);
         void setName(string);
         void setDescription(string);
@@ -35,6 +41,9 @@ class Homework
 
         // GETTERS
         int getId();
+        int getMonth();
+        int getDay();
+        int getHour();
         int getCarne();
         string getName();
         string getDescription();

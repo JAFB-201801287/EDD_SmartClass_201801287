@@ -1,11 +1,11 @@
-#ifndef LIST_H
-#define LIST_H
+#ifndef DOUBLELINKEDLIST_H
+#define DOUBLELINKEDLIST_H
 
 #include <string>
 #include <stdlib.h>
 
-#include "../Nodes/DoubleLinkedNode.h"
-#include "../Nodes/DoubleLinkedNode.cpp"
+#include "../Nodes/DoubleLinkedNode1.h"
+#include "../Nodes/DoubleLinkedNode1.cpp"
 
 using namespace std;
 
@@ -13,7 +13,7 @@ template <class T>
 
 class DoubleLinkedList
 {
-    public:
+    protected:
         DoubleLinkedList();
         ~DoubleLinkedList();
 
@@ -22,8 +22,7 @@ class DoubleLinkedList
         void delete_node(T);
         void delete_id(int);
 
-    private:
-        DoubleLinkedNode<T> *first;
+        DoubleLinkedNode1<T> *first;
         int index;
 };
 

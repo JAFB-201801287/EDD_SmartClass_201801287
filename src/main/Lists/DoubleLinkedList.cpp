@@ -18,9 +18,10 @@ DoubleLinkedList<T>::~DoubleLinkedList() {}
 template<typename T>
 void DoubleLinkedList<T>::add(T element_)
 {
-    DoubleLinkedNode<T> *new_node = new DoubleLinkedNode<T> (element_);
-    DoubleLinkedNode<T> *temp = first;
-    DoubleLinkedNode<T> *last = NULL;
+    DoubleLinkedNode1<T> *new_node = new DoubleLinkedNode1<T> (element_);
+    DoubleLinkedNode1<T> *temp = first;
+    DoubleLinkedNode1<T> *last = NULL;
+    DoubleLinkedNode1<T> empty_node;
 
     if(!first) {
         first = new_node;
@@ -45,8 +46,8 @@ void DoubleLinkedList<T>::add(T element_)
 template<typename T>
 void DoubleLinkedList<T>::print()
 {
-    DoubleLinkedNode<T> *current = new DoubleLinkedNode<T>();
-    DoubleLinkedNode<T> *temp = first;
+    DoubleLinkedNode1<T> *current = new DoubleLinkedNode1<T>();
+    DoubleLinkedNode1<T> *temp = first;
 	current = first;
 
 	if(first != NULL){
@@ -65,7 +66,7 @@ void DoubleLinkedList<T>::print()
 			current = current->after;
 		}
 	}else{
-		cout << "\nLISTA VACIA\n\n";
+		cout << "\n LISTA VACIA\n\n";
 	}
     cout << endl << endl;
 }
@@ -74,13 +75,13 @@ void DoubleLinkedList<T>::print()
 template<typename T>
 void DoubleLinkedList<T>::delete_node(T element_)
 {
-    DoubleLinkedNode<T>* current = new DoubleLinkedNode<T>();
+    DoubleLinkedNode1<T>* current = new DoubleLinkedNode1<T>();
     current = first;
-    DoubleLinkedNode<T>* before = new DoubleLinkedNode<T>();
+    DoubleLinkedNode1<T>* before = new DoubleLinkedNode1<T>();
     before = NULL;
     bool found = false;
-    DoubleLinkedNode<T> *temp = first;
-    DoubleLinkedNode<T> *last = NULL;
+    DoubleLinkedNode1<T> *temp = first;
+    DoubleLinkedNode1<T> *last = NULL;
 
     while (temp != NULL)
     {
@@ -127,8 +128,8 @@ void DoubleLinkedList<T>::delete_node(T element_)
 template<typename T>
 void DoubleLinkedList<T>::delete_id(int id)
 {
-    DoubleLinkedNode<T> *temp = first;
-    DoubleLinkedNode<T> *temp1 = temp->after;
+    DoubleLinkedNode1<T> *temp = first;
+    DoubleLinkedNode1<T> *temp1 = temp->after;
  
     if (id < 1 || id > index) {
         cout << "Fuera de rango " << endl;
@@ -139,7 +140,7 @@ void DoubleLinkedList<T>::delete_id(int id)
     } else {
         for (int i = 2; i <= id; i++) {
             if (i == id) {
-                DoubleLinkedNode<T> *aux_node = temp1;
+                DoubleLinkedNode1<T> *aux_node = temp1;
                 temp->after = temp1->after;
                 delete aux_node;
                 index--;
