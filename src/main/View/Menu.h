@@ -14,6 +14,8 @@ class Menu
     private:
         StudentController *studentController;
         HomeworkController *homeworkController;
+        ErrorController *errorController;
+        
         bool cin_bool;
 
         void clear();
@@ -41,6 +43,8 @@ class Menu
 
         void view_manual_users();
         void view_manual_homeworks();
+
+        void solve_problemens();
     public:
         Menu();
         ~Menu();

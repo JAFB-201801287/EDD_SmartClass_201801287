@@ -10,6 +10,7 @@
 #include "../Model/Homework.cpp"
 #include "../Lists/DoubleLinkedList.cpp"
 #include "StudentController.h"
+
 //#include "StudentController.cpp"
 
 
@@ -19,8 +20,10 @@ class HomeworkController: public DoubleLinkedList<Homework>
 {
     private:
         StudentController *studentController;
+        ErrorController *errorController;
         int index;
         int id_report;
+        int id_code;
         // FORMATO MES:DIA:HORA
         // MES: Julio [0]->7, Agosto [1]->8, Septiembre [2]->9, Octubre [3]->10, Noviembre [4]->11
         // DIA: [0-29] -> 1-30
@@ -29,6 +32,7 @@ class HomeworkController: public DoubleLinkedList<Homework>
         static HomeworkController* instance;
         string* split(string);
         string replace(string);
+        void init_matriz();
     public:
         HomeworkController();
         ~HomeworkController();
@@ -37,17 +41,19 @@ class HomeworkController: public DoubleLinkedList<Homework>
         Homework find_homework(string);
 
         void add_matriz(Homework,int,int,int);
-        void add_homework(Homework);
+        bool add_homework(Homework);
         void update_homework(string, string, string, string, string, string, string, string);
         void delete_homework(int,int,int);
         void print_homework();
         void massive_charge(string);
         void report_homework();
         bool find_homework(int);
+        Homework find_homework1(int);
         Homework find_homework(int,int,int);
         bool position_homework(int,int,int);
         void update_homework(int, string, string, string, string, string);
         bool is_date_valid(string&);
+        void generated_code();
 };
 
 #endif

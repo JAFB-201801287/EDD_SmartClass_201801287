@@ -4,6 +4,8 @@
 StudentController::StudentController()
 {
     this->id_report = 0;
+    this->id_code = 0;
+    errorController = ErrorController::getInstance();
 }
 
 StudentController* StudentController::instance = 0;
@@ -156,6 +158,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
 {
     Student student;
     bool flag = true;
+    bool error_mail = false;
 
     if(carne.length() == 9) 
     {
@@ -177,8 +180,7 @@ void StudentController::add_student(string carne, string dpi, string name, strin
     {
         student.setMail(mail);
     } else {
-        cout << " ERROR CORREO" << endl;
-        flag = false;
+        error_mail = true;
     }
    
     if(flag) 
@@ -189,7 +191,15 @@ void StudentController::add_student(string carne, string dpi, string name, strin
         student.setCredits(stoi(credits));
         student.setAge(stoi(age));
         add(student);
-        cout << " SE INGRESO LA INFORMACION DEL ESTUDIANTE." << endl;
+
+        if(error_mail) 
+        {
+            errorController->add_error("ESTUDIANTE", "CORREO", 0, student.getDpi());
+            cout << " SE INGRESO LA INFORMACION DEL ESTUDIANTE. (ERROR EN CORREO)" << endl;
+        } else {
+            cout << " SE INGRESO LA INFORMACION DEL ESTUDIANTE." << endl;
+        }
+        
     } else {
         cout << " ERROR NO SE LOGRO INGRESAR EL ESTUDIANTE." << endl;
     }
@@ -383,26 +393,67 @@ void StudentController::report_student()
 	}
 
     diagram = "digraph g {\n" + diagram + "}";
-    string comando1 = "dot -Tpng -o StudentReport" + to_string(this->id_report) + ".png StudentReport" + to_string(this->id_report) + ".dot";
-    string comando2 = "mimeopen -d StudentReport" + to_string(this->id_report) + ".png";
+    string comando1 = "dot -Tpng -o StudentReport/StudentReport" + to_string(this->id_report) + ".png StudentReport/StudentReport" + to_string(this->id_report) + ".dot";
+    string comando2 = "mimeopen -d StudentReport/StudentReport" + to_string(this->id_report) + ".png";
     char cmd1[comando1.size() + 1];
     strcpy(cmd1, comando1.c_str());
     char cmd2[comando2.size() + 1];
     strcpy(cmd2, comando2.c_str());
 
-    file.open("StudentReport" + to_string(this->id_report) + ".dot", ios::out);
+    file.open("StudentReport/StudentReport" + to_string(this->id_report) + ".dot", ios::out);
 
     if(file.fail()) 
     {
         cout << "NO SE ENCONTRO EL ARCHIVO" << endl;
+        file.close();
     } else {
         file << diagram;
+        file.close();
         system(cmd1);
         system(cmd2);
         this->id_report++;
     }
+} 
 
-    file.close();
+void StudentController::generated_code() 
+{
+    ofstream file;
+    string diagram = "";
+    DoubleLinkedNode<Student> *current = new DoubleLinkedNode<Student>();
+	current = first;
+
+	if(first != NULL){
+		do{        
+            diagram += "\t¿element type=\"user\"?\n";
+            diagram += "\t\t¿item Carnet = \"" + to_string(current->element.getCarne()) + "\" $?\n";
+            diagram += "\t\t¿item DPI = \"" + current->element.getDpi() + "\" $?\n";
+            diagram += "\t\t¿item Nombre = \"" + current->element.getName() + "\" $?\n";
+            diagram += "\t\t¿item Carrera = \"" + current->element.getCareer() + "\" $?\n";
+            diagram += "\t\t¿item Password = \"" + current->element.getPassword() + "\" $?\n";
+            diagram += "\t\t¿item Creditos = " + to_string(current->element.getCredits()) + " $?\n";
+            diagram += "\t\t¿item Edad = " + to_string(current->element.getAge()) + " $?\n";
+            diagram += "\t\t¿item Correo = \"" + current->element.getMail() + "\" $?\n";
+            diagram += "\t¿$element?\n\n";
+
+			current = current->after;
+		} while(current!=first);
+	}else{
+		cout << "\nLISTA VACIA\n";
+	}
+
+    diagram = "¿Elements?\n\n" + diagram + "¿$Elements?";
+
+    file.open("Generated Code/Student" + to_string(this->id_code) + ".txt", ios::out);
+
+    if(file.fail()) 
+    {
+        cout << "NO SE ENCONTRO EL ARCHIVO" << endl;
+        file.close();
+    } else {
+        file << diagram;
+        file.close();
+        this->id_code++;
+    }
 } 
 
 bool StudentController::is_email_valid(string& email)

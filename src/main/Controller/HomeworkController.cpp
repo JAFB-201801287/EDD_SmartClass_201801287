@@ -5,7 +5,10 @@ HomeworkController::HomeworkController()
 {
     this->index = 0;
     this->id_report = 0;
+    this->id_code = 0;
     studentController = StudentController::getInstance();
+    errorController = ErrorController::getInstance();
+    this->init_matriz();
 }
 
 HomeworkController* HomeworkController::instance = 0;
@@ -43,6 +46,23 @@ string* HomeworkController::split(string line)
     return elements;
 }
 
+void HomeworkController::init_matriz()
+{
+    int month = 5;
+    int day = 30; // COLUMN
+    int hour = 9; // ROW
+    for (int z = 0; z < month; z++)
+    {
+        for (int x = 0; x < day; x++)
+        {
+            for (int y = 0; y < hour; y++)
+            { 
+                this->matriz[z][x][y] = NULL;
+            }
+        }
+    }
+}
+
 string HomeworkController::replace(string line) 
 {
     string elements = "";
@@ -72,6 +92,8 @@ string HomeworkController::replace(string line)
 void HomeworkController::add_matriz(Homework homework, int month, int day, int hour) 
 {
     bool flag = true;
+    bool error_state = false;
+    bool error_date = false;
 
     if(this->matriz[month-7][day-1][hour-8] == NULL) 
     {
@@ -101,7 +123,7 @@ void HomeworkController::add_matriz(Homework homework, int month, int day, int h
     {
         cout << " FORMATO DE ESTADO ACEPTADO." << endl;
     } else {
-        flag = false;
+        error_state = true;
         cout << " ERROR FORMATO DE ESTADO INCORRECTO." << endl;
     }
 
@@ -110,19 +132,33 @@ void HomeworkController::add_matriz(Homework homework, int month, int day, int h
     {
         cout << " FORMATO DE FECHA ACEPTADO." << endl;
     } else {
-        flag = false;
+        error_date = true;
         cout << " ERROR FORMATO DE FECHA INCORRECTO." << endl;
     }
     
-    cout << endl;
     if (flag)
     {
         this->index++;
         homework.setId(this->index);
         this->matriz[month-7][day-1][hour-8] = &homework;
         add_homework(homework);
+        cout << " SE INGRESO LA INFORMACION DEL ESTUDIANTE.";
+        if(error_state) 
+        {
+            errorController->add_error("TAREA", "ESTADO", homework.getId(), "");
+            cout << "  (ERROR EN ESTADO)";
+        } 
+
+        if(error_date) 
+        {
+            errorController->add_error("TAREA", "FECHA", homework.getId(), "");
+            cout << "  (ERROR EN FECHA)";
+        } 
+        cout << endl;
+    } else {
+        cout << " ERROR NO SE LOGRO INGRESAR EL ESTUDIANTE." << endl;
     }
-    
+    cout << endl;
 }
 
 void HomeworkController::delete_homework(int month, int day, int hour)
@@ -198,6 +234,27 @@ bool HomeworkController::find_homework(int id)
     }
 
     return false;
+} 
+
+Homework HomeworkController::find_homework1(int id) 
+{
+    DoubleLinkedNode1<Homework> *current = new DoubleLinkedNode1<Homework>();
+    Homework homework;
+	current = first;
+    if(first != NULL)
+    {
+		while(current != NULL) 
+        {
+            if (current->element.getId() == id)
+            {
+                return current->element;
+            }
+            
+            current = current->after;
+        }
+    }
+
+    return homework;
 } 
 
 Homework HomeworkController::find_homework(int month, int day, int hour) 
@@ -299,7 +356,7 @@ void HomeworkController::update_homework(int id, string name, string description
 
 } 
 
-void HomeworkController::add_homework(Homework homework) 
+bool HomeworkController::add_homework(Homework homework) 
 {
     int month = 5;
     int day = 30; // COLUMN
@@ -311,15 +368,16 @@ void HomeworkController::add_homework(Homework homework)
         {
             for (int y = 0; y < hour; y++)
             {
-                if (this->matriz[z][x][y]->getId() == this->index)
+                if (this->matriz[z][x][y] != NULL && this->matriz[z][x][y]->getId() == homework.getId())
                 {
                     add(homework);
+                    return true;
                 }
                 
             }
         }
     }
-    
+    return false;
 } 
 
 void HomeworkController::massive_charge(string path) 
@@ -382,7 +440,6 @@ void HomeworkController::report_homework()
 
 	if(first != NULL){
 		while(current != NULL){
-
             diagram += "\t\"" + to_string(current->element.getId()) + "\" [\n";
             diagram += "\t\tlabel = \"<f0> ID: " + to_string(current->element.getId()) + "| ";
             diagram += "<f1> CARNE: " + to_string(current->element.getCarne()) + "| ";
@@ -405,6 +462,7 @@ void HomeworkController::report_homework()
                 diagram += "\t\tid = " + to_string(id) + "\n\t];\n\n";
                 id++;
             }
+            
 
 			current = current->after;
 		}
@@ -413,24 +471,66 @@ void HomeworkController::report_homework()
 	}
 
     diagram = "digraph g {\n" + diagram + "}";
-    string comando1 = "dot -Tpng -o HomeworkReport" + to_string(this->id_report) + ".png HomeworkReport" + to_string(this->id_report) + ".dot";
-    string comando2 = "mimeopen -d HomeworkReport" + to_string(this->id_report) + ".png";
+    string comando1 = "dot -Tpng -o HomeworkReport/HomeworkReport" + to_string(this->id_report) + ".png HomeworkReport/HomeworkReport" + to_string(this->id_report) + ".dot";
+    string comando2 = "mimeopen -d HomeworkReport/HomeworkReport" + to_string(this->id_report) + ".png";
     char cmd1[comando1.size() + 1];
     strcpy(cmd1, comando1.c_str());
     char cmd2[comando2.size() + 1];
     strcpy(cmd2, comando2.c_str());
 
-    file.open("HomeworkReport" + to_string(id_report) + ".dot", ios::out);
+    file.open("HomeworkReport/HomeworkReport" + to_string(id_report) + ".dot", ios::out);
 
     if(file.fail()) 
     {
         cout << "NO SE ENCONTRO EL ARCHIVO" << endl;
+        file.close();
     } else {
         file << diagram;
+        file.close();
         system(cmd1);
         system(cmd2);
         id_report++;
     }
-    
-    file.close();
+} 
+
+
+void HomeworkController::generated_code() 
+{
+    ofstream file;
+    string diagram = "";
+    Homework homework;
+    DoubleLinkedNode1<Homework> *current = new DoubleLinkedNode1<Homework>();
+	current = first;
+
+	if(first != NULL){
+		while(current != NULL){
+            diagram += "\t¿element type=\"task\"?\n";
+            diagram += "\t\t¿item Carnet = \"" + to_string(current->element.getCarne()) + "\" $?\n";
+            diagram += "\t\t¿item Nombre = \"" + current->element.getName() + "\" $?\n";
+            diagram += "\t\t¿item Descripcion = \"" + current->element.getDescription() + "\" $?\n";
+            diagram += "\t\t¿item Materia = \"" + current->element.getMatter() + "\" $?\n";
+            diagram += "\t\t¿item Fecha = \"" + current->element.getDate() + "\" $?\n";
+            diagram += "\t\t¿item Hora = \"" + to_string(current->element.getHour()) + ":00\" $?\n";
+            diagram += "\t\t¿item Estado = \"" + current->element.getState() + "\" $?\n";
+            diagram += "\t¿$element?\n\n";
+
+			current = current->after;
+		}
+	}else{
+		cout << "\nLISTA VACIA\n";
+	}
+
+    diagram = "¿Elements?\n\n" + diagram + "¿$Elements?";
+
+    file.open("Generated Code/Homework" + to_string(id_code) + ".txt", ios::out);
+
+    if(file.fail()) 
+    {
+        cout << "NO SE ENCONTRO EL ARCHIVO" << endl;
+        file.close();
+    } else {
+        file << diagram;
+        file.close();
+        id_code++;
+    }
 } 

@@ -7,9 +7,10 @@
 #include <sstream>
 #include <fstream>
 
-#include "../Model/Student.cpp"
-#include "../Lists/CircularDoubleLinkedList.cpp"
 
+#include "../Lists/CircularDoubleLinkedList.cpp"
+#include "../Model/Student.cpp"
+#include "ErrorController.cpp"
 
 using namespace std;
 
@@ -17,11 +18,14 @@ class StudentController: public CircularDoubleLinkedList<Student>
 {
     private:
         int id_report;
+        int id_code;
         static StudentController* instance;
+        
+        ErrorController *errorController;
+
         string* split(string);
         string replace(string);
         string remove_line_breaks(string);
-        bool is_email_valid(string&);
     public:
         StudentController();
         ~StudentController();
@@ -37,6 +41,9 @@ class StudentController: public CircularDoubleLinkedList<Student>
         void print_student();
         void massive_charge(string path);
         void report_student();
+        void generated_code();
+
+        bool is_email_valid(string&);
 };
 
 #endif

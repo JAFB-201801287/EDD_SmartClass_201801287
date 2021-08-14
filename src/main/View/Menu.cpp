@@ -5,6 +5,7 @@ Menu::Menu()
 {
     studentController = StudentController::getInstance();
     homeworkController = HomeworkController::getInstance();
+    errorController = ErrorController::getInstance();
     cin_bool = true;
 }
 
@@ -64,6 +65,11 @@ void Menu::print_menu_options()
     cout << " |      3) INGRESO MANUAL                                                           |" << endl;
     cout << " |      4) REPORTES                                                                 |" << endl;
     cout << " |      5) SALIR                                                                    |" << endl;
+    if(errorController->getFirst() != NULL) 
+    {
+        cout << " |                                                                                  |" << endl;
+        cout << " |      0) RESOLVER ERRORES                                                         |" << endl;
+    }
     cout << " ************************************************************************************" << endl;
     cout << " ************************************************************************************" << endl;
 }
@@ -170,6 +176,9 @@ void Menu::view_menu()
 
         switch (option)
         {
+            case '0':
+                solve_problemens();
+                break;
             case '1':
                 user_load();
                 break;
@@ -350,11 +359,12 @@ void Menu::print_menu_report()
                 this->stop();
                 break;
             case '5':
-
+                errorController->report_error();
                 this->stop();
                 break;
             case '6':
-
+                studentController->generated_code();
+                homeworkController->generated_code();
                 this->stop();
                 break;
             case '7':
@@ -695,6 +705,94 @@ void Menu::view_update_homework()
         } while (flag);
     } else {
         cout << " ID DE TAREA NO ENCONTRADO.\n";
+    }
+
+}
+
+void Menu::solve_problemens() 
+{
+    if(errorController->getFirst() != NULL) 
+    {
+        string option = "s";
+        bool flag = true;
+        Error* error;
+        string mail = "";
+        string date = "";
+        string state = "";
+        do
+        { 
+            error = errorController->getFirst();
+            if(error != NULL) 
+            {
+                if(error->getType() == "ESTUDIANTE" && error->getDescrition() == "CORREO") 
+                {
+                    Student student = studentController->find_student(error->getDpi());
+                    cout << " ESTUDIANTE" << endl;
+                    cout << " ____________________________________________________________________________________" << endl;
+                    cout << " CARNET: " << student.getCarne() << endl;
+                    cout << " NOMBRE: " << student.getName() << endl;
+                    cout << " CARRERA: " << student.getCareer() << endl;
+                    cout << " PASSWORD: " << student.getPassword() << endl;
+                    cout << " CREDITOS: " << student.getCredits() << endl;
+                    cout << " EDAD: " << student.getAge() << endl;
+                    cout << " CORREO: ";
+                    mail = scanner();
+
+                    if(studentController->is_email_valid(mail)) 
+                    {
+                        studentController->update_student(error->getDpi(), "", "", "", "", "", "", mail);
+                        errorController->delete_error(error->getId());
+                    }
+                } else if(error->getType() == "TAREA") 
+                {
+                    Homework homework = homeworkController->find_homework1(error->getId_homework());
+                    cout << " TAREA" << endl;
+                    cout << " ____________________________________________________________________________________" << endl;
+                    cout << " CARNET: " << homework.getCarne() << endl;
+                    cout << " NOMBRE: " << homework.getName() << endl;
+                    cout << " DESCRIPCION: " << homework.getDescription() << endl;
+                    cout << " MATERIA: " << homework.getMatter() << endl;
+                    if(error->getDescrition() == "ESTADO") 
+                    {
+                        cout << " ESTADO (Pendiente, Realizado, Incumplido): ";
+                        state = scanner();
+                        if ((state== "Incumplido") || (state == "Pendiente") || (state == "Cumplido"))
+                        {
+                            homeworkController->update_homework(error->getId_homework(), "", "", "", "", state);
+                            errorController->delete_error(error->getId());
+                        } 
+                    } else if(error->getDescrition() == "FECHA") 
+                    {
+                        cout << " FECHA: ";
+                        date = scanner();
+
+                        if(homeworkController->is_date_valid(date)) 
+                        {
+                            homeworkController->update_homework(error->getId_homework(), "", "", "", date, "");
+                            errorController->delete_error(error->getId());
+                        } 
+                    }
+                }
+                this->stop();
+                clear();
+                cout << endl;
+                print_info();
+                cout << endl;
+                print_menu_options();
+
+                cout << " DECEA SEGUIR ARREGLANDO ERRORES (s/n): ";
+                option = scanner();
+                cout << " ____________________________________________________________________________________" << endl;
+            } else {
+                cout << " NO HAY MAS ERRORES PARA ARREGLAR." << endl;
+                flag = false;
+            }
+
+        } while (flag && option == "s");
+        
+
+    } else {
+        cout << " ERROR OPCION INGRESADA NO VALIDA." << endl;
     }
 
 }

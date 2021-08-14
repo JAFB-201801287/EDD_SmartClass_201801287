@@ -24,10 +24,12 @@ void LinkedList<T>::add(T element_)
 
     if (!first) {
         first = new_node;
+        first->after = NULL;
     } else {
         while (temp->after != NULL) {
             temp = temp->after;
         }
+        new_node->after = NULL;
         temp->after = new_node;
     }
     index++;

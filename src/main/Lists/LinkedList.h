@@ -1,7 +1,7 @@
 // COLA
 
-#ifndef LIST_H
-#define LIST_H
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
 
 #include <string>
 #include <stdlib.h>
@@ -15,14 +15,14 @@ template <class T>
 
 class LinkedList
 {
-    public:
+    protected:
         LinkedList();
         ~LinkedList();
 
         void add(T);
         void print();
 
-    private:
+
         Node<T> *first;
         int index;
 };

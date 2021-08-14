@@ -4,7 +4,7 @@
 template<typename T>
 Node<T>::Node()
 {
-    element = NULL;
+    //element = NULL;
     after = NULL;
 }
 
