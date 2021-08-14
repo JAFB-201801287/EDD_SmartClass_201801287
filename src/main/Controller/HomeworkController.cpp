@@ -320,17 +320,17 @@ void HomeworkController::update_homework(int id, string name, string description
 
                 if (description != "") 
                 {
-                    current->element.setName(name);
+                    current->element.setDescription(description);
                 }
 
                 if (matter != "") 
                 {
-                    current->element.setName(name);
+                    current->element.setMatter(matter);
                 }
 
                 if (date != "") 
                 {
-                    if(!is_date_valid(date)) 
+                    if(is_date_valid(date)) 
                     {
                         current->element.setDate(date);
                     } else {
@@ -342,7 +342,7 @@ void HomeworkController::update_homework(int id, string name, string description
                 {
                     if ((state== "Incumplido") || (state == "Pendiente") || (state == "Cumplido"))
                     {
-                        current->element.setName(name);
+                        current->element.setState(state);
                     } else {
                         cout << " ERROR FORMATO DE ESTADO INCORRECTO." << endl;
                     }
@@ -420,10 +420,8 @@ void HomeworkController::massive_charge(string path)
 
 bool HomeworkController::is_date_valid(string& date)
 {
-   // define a regular expression
    const regex pattern("\\d{4}\\/(0?[1-9]|1[012])\\/(0[1-9]|[12][0-9]|3[01])");
 
-   // try to match the string with the regular expression
    return regex_match(date, pattern);
 }
 

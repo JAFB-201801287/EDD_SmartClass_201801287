@@ -1,0 +1,28 @@
+digraph g {
+	graph [
+		rankdir = "LR"
+	];
+
+	node [
+		fontsize = "16"
+		shape = "ellipse"
+	];
+
+	edge [
+	];
+
+	"2" [
+		label = "<f0> ID: 2| <f1> TIPO: TAREA| <f2> DESCRIPCION: ESTADO"
+	shape = "record"
+	];
+
+	"2":f1 -> "3":f1 [
+		id = 0
+	];
+
+	"3" [
+		label = "<f0> ID: 3| <f1> TIPO: TAREA| <f2> DESCRIPCION: FECHA"
+	shape = "record"
+	];
+
+}

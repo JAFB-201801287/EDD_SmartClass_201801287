@@ -113,14 +113,14 @@ void ErrorController::report_error()
 	}
 
     diagram = "digraph g {\n" + diagram + "}";
-    string comando1 = "dot -Tpng -o ErrorReport" + to_string(this->id_report) + ".png ErrorReport" + to_string(this->id_report) + ".dot";
-    string comando2 = "mimeopen -d ErrorReport" + to_string(this->id_report) + ".png";
+    string comando1 = "dot -Tpng -o ErrorReport/ErrorReport" + to_string(this->id_report) + ".png ErrorReport/ErrorReport" + to_string(this->id_report) + ".dot";
+    string comando2 = "mimeopen -d ErrorReport/ErrorReport" + to_string(this->id_report) + ".png";
     char cmd1[comando1.size() + 1];
     strcpy(cmd1, comando1.c_str());
     char cmd2[comando2.size() + 1];
     strcpy(cmd2, comando2.c_str());
 
-    file.open("ErrorReport" + to_string(this->id_report) + ".dot", ios::out);
+    file.open("ErrorReport/ErrorReport" + to_string(this->id_report) + ".dot", ios::out);
 
     if(file.fail()) 
     {

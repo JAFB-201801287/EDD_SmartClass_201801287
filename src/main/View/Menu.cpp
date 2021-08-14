@@ -743,6 +743,7 @@ void Menu::solve_problemens()
                         studentController->update_student(error->getDpi(), "", "", "", "", "", "", mail);
                         errorController->delete_error(error->getId());
                     }
+                    this->stop();
                 } else if(error->getType() == "TAREA") 
                 {
                     Homework homework = homeworkController->find_homework1(error->getId_homework());
@@ -761,6 +762,7 @@ void Menu::solve_problemens()
                             homeworkController->update_homework(error->getId_homework(), "", "", "", "", state);
                             errorController->delete_error(error->getId());
                         } 
+                        this->stop();
                     } else if(error->getDescrition() == "FECHA") 
                     {
                         cout << " FECHA: ";
@@ -771,9 +773,10 @@ void Menu::solve_problemens()
                             homeworkController->update_homework(error->getId_homework(), "", "", "", date, "");
                             errorController->delete_error(error->getId());
                         } 
+                        this->stop();
                     }
                 }
-                this->stop();
+                
                 clear();
                 cout << endl;
                 print_info();

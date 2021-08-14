@@ -458,9 +458,7 @@ void StudentController::generated_code()
 
 bool StudentController::is_email_valid(string& email)
 {
-   // define a regular expression
    const regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.)(com|es|org)( )*(\\n)*");
 
-   // try to match the string with the regular expression
    return regex_match(email, pattern);
 }
