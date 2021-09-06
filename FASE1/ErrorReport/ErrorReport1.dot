@@ -1,0 +1,46 @@
+digraph g {
+	graph [
+		rankdir = "LR"
+	];
+
+	node [
+		fontsize = "16"
+		shape = "ellipse"
+	];
+
+	edge [
+	];
+
+	"0" [
+		label = "<f0> ID: 0| <f1> TIPO: ESTUDIANTE| <f2> DESCRIPCION: CORREO"
+	shape = "record"
+	];
+
+	"0":f1 -> "1":f1 [
+		id = 0
+	];
+
+	"1" [
+		label = "<f0> ID: 1| <f1> TIPO: ESTUDIANTE| <f2> DESCRIPCION: CORREO"
+	shape = "record"
+	];
+
+	"1":f1 -> "2":f1 [
+		id = 1
+	];
+
+	"2" [
+		label = "<f0> ID: 2| <f1> TIPO: TAREA| <f2> DESCRIPCION: ESTADO"
+	shape = "record"
+	];
+
+	"2":f1 -> "3":f1 [
+		id = 2
+	];
+
+	"3" [
+		label = "<f0> ID: 3| <f1> TIPO: TAREA| <f2> DESCRIPCION: FECHA"
+	shape = "record"
+	];
+
+}
