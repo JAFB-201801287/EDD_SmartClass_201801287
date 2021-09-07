@@ -1,0 +1,13 @@
+sudo apt-get install python-pip
+sudo apt-get install python3-pip
+
+pip install virtualenv
+sudo pip3 install virtualenv
+
+virtualenv venv -p python3
+
+python3 -m venv venv
+source venv/bin/activate
+
+// FLASK
+pip install Flask
