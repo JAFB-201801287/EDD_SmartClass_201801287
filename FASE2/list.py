@@ -38,22 +38,22 @@ class DoubleLinkedList():
         last = Node()
         
         if(self.head == None):
-            self.head = new_node;
+            self.head = new_node
             self.head.setAfter(None) 
-            self.head.setBefore(None);
+            self.head.setBefore(None)
             
         else:
             while(temp != None):
                 last = temp;
-                temp = temp.getAfter();
+                temp = temp.getAfter()
         
         last.setAfter(new_node)
         new_node.setBefore(last)
-        new_node.setAfter(None);
+        new_node.setAfter(None)
         last = new_node;
 
         ++self.index
-        ++self.size
+        self.size = 1 + self.size
 
     # DELETE
     def delete(self, element):
@@ -150,6 +150,110 @@ class DoubleLinkedList():
 
         return temp
 
+# CLASE LINKED LIST -----------------------------------------------------------------------------------------------------
+class LinkedList():
+
+# CONSTRUCTOR VACIO
+    def __init__(self):
+        self.index = 1
+        self.head = None
+        self.size = 0
+
+# GET LIST
+    def getList(self):
+        return self.head
+
+# GET SIZE
+    def getSize(self):
+        return self.size
+
+# SET HEAD
+    def setHead(self,  head):
+        self.head = head
+
+        i = 0
+        temp = head
+        while(temp is not None):
+            i = i+1
+            temp = temp.getAfter()
+        self.size = i
+
+
+# ADD
+    def add(self, element):
+        new_node = Node(self.index, element)
+        temp = self.head
+        last = Node()
+        
+        if(self.head == None):
+            self.head = new_node
+            self.head.setAfter(None) 
+            
+        else:
+            while(temp != None):
+                last = temp;
+                temp = temp.getAfter()
+        
+        last.setAfter(new_node)
+        new_node.setAfter(None)
+        last = new_node;
+
+        ++self.index
+        self.size = 1 + self.size
+
+    # DELETE
+    def delete(self, element):
+        current = self.head
+        before = None
+        found = False
+        temp = self.head
+        last = None
+
+        while(temp != None):
+            last = temp
+            temp = temp.getAfter()
+
+        if(self.head != None or found):
+            while(current != None):
+                if(current.getElement() == element):
+                    if(current == self.head):
+                        self.head = self.head.getAfter()
+                    elif(current == last):
+                        before.setAfter(None)
+                        last = before
+                    else:
+                        if(before != None): before.setAfter(current.getAfter())
+                        current.getAfter().setBefore(before)
+                    found = True
+                    --self.size
+                before = current
+                current = current.getAfter()
+
+# SORTED ADD 
+    def sortedAdd(self, key, element):
+        newNode = Node(key, element)
+        current = self.head
+        last = Node()
+        
+        if(self.head == None):
+            self.head = newNode;
+            self.head.setAfter(None) 
+            self.head.setBefore(None);
+        elif(self.head.getId() >= newNode.getId()):
+            newNode.setAfter(self.head)
+            newNode.getAfter().setBefore(newNode)
+            self.head = newNode
+        else:
+            while((current.getAfter() is not None) and (current.getAfter().getId() < newNode.getId())):
+                current = current.getAfter()
+            newNode.setAfter(current.getAfter())
+
+            if (current.getAfter() != None):
+                newNode.getAfter().setBefore(newNode)
+            current.setAfter(newNode)
+            newNode.setBefore(current)
+        
+        self.size = 1 + self.size
 
 # CLASE AVL TREE --------------------------------------------------------------------------------------------------------
 class AVLTree():
@@ -513,7 +617,51 @@ class BTree():
             self.printNode(nodes.getElement(), c+1)
             nodes = nodes.getAfter()
 
-        
+# CLASE SPARCE MATRIZ ---------------------------------------------------------------------------------------------------
+class SparseMatrix():
+
+# CONSTRUCTOR
+    def __init__(self, columnMax = 0, rowMax = 0):
+        self.columnMax = columnMax
+        self.rowMax = rowMax
+        self.matrix = [[None for column in range(columnMax)] for row in range(rowMax)]
+        self.sparseMatrix = None
+        self.size = 0   
+
+# GET 
+
+    def get(self):
+        return self.sparseMatrix
+
+# ADD
+    def add(self, column, row, element):
+        if(self.sparseMatrix == None) and (column <= self.columnMax) and (row <= self.rowMax):
+            self.matrix[row][column] = element
+            self.size = self.size + 1
+            return True
+        return False
+
+# ADD SPARSE MATRIX
+    def addSparseMatrix(self):
+        if(self.matrix is not None):
+            self.sparseMatrix = [[None for column in range(3)] for row in range(self.size+1)]
+            temp = self.sparseMatrix
+
+            temp[0][0] = self.rowMax
+            temp[0][1] = self.columnMax
+            temp[0][2] = self.size
+
+            count = 1
+            for row in range(self.rowMax):
+                for column in range(self.columnMax):
+                    if(self.matrix[row][column] is not None):
+                        temp[count][0] = row
+                        temp[count][1] = column
+                        temp[count][2] = self.matrix[row][column]
+                        count = count + 1
+
+
+
 
 
 
