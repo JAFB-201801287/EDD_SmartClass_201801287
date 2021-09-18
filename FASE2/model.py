@@ -1,21 +1,14 @@
 # -*- coding: utf-8 -*-
 
 # CLASE NODE ------------------------------------------------------------------------------------------------------------
-class Node():
-
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.id = 0
-        self.element = []
-        self.after = Node()
-        self.before = Node()
+class Node(object):
 
 # CONSTRUCTOR
-    def __init__(self, id, element, after, before):
+    def __init__(self, id = 0, element = None, after = None, before = None):
         self.id = id
-        self.element = id
+        self.element = element
         self.after = after
-        self.before = after
+        self.before = before
 
 # SETTERS
     def setId(self, id):
@@ -43,23 +36,105 @@ class Node():
     def getBefore(self):
         return self.before
 
-# CLASE ESTUDIANTE ------------------------------------------------------------------------------------------------------
-class Student():
-
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.carne = 0
-        self.dpi = ""
-        self.name = ""
-        self.career = ""
-        self.email = ""
-        self.password = ""
-        self.credits = ""
-        self.age = 0
-        self.yearList = []
+# CLASE NODO ARBOL AVL --------------------------------------------------------------------------------------------------
+class AVLNode(object):
 
 # CONSTRUCTOR
-    def __init__(self, carne, dpi, name, career, email, password, credits, age):
+    def __init__(self, key = 0, element = None, left = None, right = None, height = 0):
+        self.key = key
+        self.element = element
+        self.left = left
+        self.right = right
+        self.height = height
+
+# SETTERS
+    def setKey(self, key):
+        self.key = key
+
+    def setElement(self, element):
+        self.element = element
+
+    def setLeft(self, left):
+        self.left = left
+
+    def setRight(self, right):
+        self.right = right
+
+    def setHeight(self, height):
+        self.height = height
+
+# GETTERS
+    def getKey(self):
+        return self.key
+
+    def getElement(self):
+        return self.element
+
+    def getLeft(self):
+        return self.left
+
+    def getRight(self):
+        return self.right
+
+    def getHeight(self):
+        return self.height
+
+# CLASE NODO ARBOL B ----------------------------------------------------------------------------------------------------
+class BTreeNode(object):
+
+# CONSTRUCTOR
+    def __init__(self, elements = [], nodes = [], parent = None, maxKey = 0, minKey = 0, leaf = False):
+        self.elements = elements
+        self.nodes = nodes
+        self.parent = parent
+        self.maxKey = maxKey
+        self.minKey = minKey
+        self.leaf = leaf
+
+# SETTERS
+    def setElements(self, elements):
+        self.elements = elements
+
+    def setNodes(self, nodes):
+        self.nodes = nodes
+
+    def setParent(self, parent):
+        self.parent = parent
+
+    def setMaxKey(self, maxKey):
+        self.maxKey = maxKey
+
+    def setMinKey(self, minKey):
+        self.minKey = minKey
+
+    def setLeaf(self, leaf):
+        self.leaf = leaf
+
+# GETTERS
+    def getElements(self):
+        return self.elements
+
+    def getNodes(self):
+        return self.nodes
+
+    def getParent(self):
+        return self.parent
+
+    def getMaxKey(self):
+        return self.maxKey
+
+    def getMinKey(self):
+        return self.minKey
+
+    def isLeaf(self):
+        return self.leaf
+
+
+# CLASE ESTUDIANTE ------------------------------------------------------------------------------------------------------
+class Student(object):
+
+# CONSTRUCTOR
+    def __init__(self, carne = 0, dpi = "", name = "", career = "", email = "", password = "", credits = 0, age = 0):
         self.carne = carne
         self.dpi = dpi
         self.name = name
@@ -127,16 +202,10 @@ class Student():
         return self.yearList
 
 # CLASE YEAR ------------------------------------------------------------------------------------------------------------
-class Year():
-
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.year = 0
-        self.months = []
-        self.semester = []
+class Year(object):
 
 # CONSTRUCTOR
-    def __init__(self, year, months, semesters):
+    def __init__(self, year = 0, months = [], semesters = []):
         self.year = year
         self.months = months
         self.semester = semesters
@@ -162,15 +231,10 @@ class Year():
         return self.semesters
 
 # CLASE YEAR ------------------------------------------------------------------------------------------------------------
-class Month():
-        
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.month = ""
-        self.homeworks = ""
+class Month(object):
 
 # CONSTRUCTOR
-    def __init__(self, month, homeworks):
+    def __init__(self, month = 0, homeworks = []):
         self.month = month
         self.homeworks = homeworks
 
@@ -189,15 +253,10 @@ class Month():
         return self.homeworks
 
 # CLASE SEMESTER --------------------------------------------------------------------------------------------------------
-class Semester():
-        
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.semester = ""
-        self.courses = ""
+class Semester(object):
 
 # CONSTRUCTOR
-    def __init__(self, semester, courses):
+    def __init__(self, semester = 0, courses = []):
         self.semester = semester
         self.courses = courses
 
@@ -216,20 +275,10 @@ class Semester():
         return self.courses
         
 # CLASE RECORDATORIO ----------------------------------------------------------------------------------------------------
-class Reminder():
-
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.carne = 0
-        self.name = ""
-        self.description = ""
-        self.subject = ""
-        self.date = ""
-        self.hour = ""
-        self.state = ""
+class Reminder(object):
 
 # CONSTRUCTOR
-    def __init__(self, carne, name, description, subject, date, hour, state):
+    def __init__(self, carne = 0, name = "", description = "", subject = "", date = "", hour = 0, state = ""):
         self.carne = carne
         self.name = name
         self.description = description
@@ -283,23 +332,15 @@ class Reminder():
         return self.state
 
 # CLASE CURSO -----------------------------------------------------------------------------------------------------------
-class Course():
-
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.code = 0
-        self.name = ""
-        self.credits = 0
-        self.prerequisits = []
-        self.mandatory = False
+class Course(object):
 
 # CONSTRUCTOR
-    def __init__(self, code, name, credits, prerequisits, mandatory):
+    def __init__(self, code = 0, name = "", credits = 0, prerequisits = [], mandatory = False):
         self.code = code
         self.name = name
         self.credits = credits
         self.prerequisits = []
-        self.require = False
+        self.require = mandatory
 
 # SETTERS
     def setCode(self, code):
