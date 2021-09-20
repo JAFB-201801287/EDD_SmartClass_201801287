@@ -272,8 +272,9 @@ class AVLTree():
 
     def insert(self, key, element, node):
         if node is None:
-            node = AVLNode(key)
-        elif(key < node.getKey()):
+            node = AVLNode(key, element)
+        
+        if(key < node.getKey()):
             node.setLeft(self.insert(key, element, node.getLeft()))    
             if(abs(self.height(node.getLeft()) - self.height(node.getRight())) == 2):
                 if (key < node.getLeft().getKey()):
@@ -286,7 +287,7 @@ class AVLTree():
                 if(key > node.getRight().getKey()):
                     node = self.doubleRightRotate(node)
                 else:
-                    node = self.leftRightRotate(node)
+                    node = self.rightLeftRotate(node)
                     
         node.setHeight(max(self.height(node.getRight()), self.height(node.getLeft())) + 1)
 
@@ -333,7 +334,7 @@ class AVLTree():
         elif(key < node.getKey()):
             return self.search(key, node.getLeft())        
         elif(key > node.getKey()):
-            return self.search(key, node.getLeft())
+            return self.search(key, node.getRight())
         else:
             return node
 
@@ -369,7 +370,7 @@ class AVLTree():
 
     def preOrderTraverse(self, node):
          if node is not None:
-             print(str(node.getKey()))
+             print(str(node.getKey()) + " - " + str(node.getElement()))
              self.preOrderTraverse(node.getLeft())
              self.preOrderTraverse(node.getRight())
 
@@ -629,7 +630,6 @@ class SparseMatrix():
         self.size = 0   
 
 # GET 
-
     def get(self):
         return self.sparseMatrix
 

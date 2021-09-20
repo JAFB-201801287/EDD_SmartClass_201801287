@@ -1,4 +1,4 @@
-from os import name
+from os import name, sep
 import json
 from flask import Flask, request, jsonify
 from controller import StudentController
@@ -9,6 +9,43 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def start():
     return "JOSE ANDRES FLORES BARCO\n201801287\nPROYECTO EDD FASE 2"
+
+@app.route('/carga', methods=['POST'])
+def bulkData():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        isStudent = False
+        isReminder = False
+        isCurse = False
+
+        type = content["tipo"]
+        path = content["path"]
+
+        for data in type.split(sep="|"):
+            if(data == "estudiante"):
+                isStudent = True
+            elif(data == "recordatorio"):
+                isReminder = True
+            elif(data == "curso"):
+                isCurse = True
+
+        studentController.bulkLoad(path, isStudent, isReminder, isCurse)
+
+        if(isStudent or isReminder or isCurse):
+            return jsonify({
+                "tipo": type,
+                "path": path
+            })
+        else:
+            return jsonify({
+                "tipo": type,
+                "path": path,
+                "ERROR": "TIPO NO COMPATIBLE"
+            })
+
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 
 @app.route('/estudiante', methods=['GET'])
 def findStudent():
