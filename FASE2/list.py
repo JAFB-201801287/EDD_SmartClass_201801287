@@ -30,6 +30,24 @@ class DoubleLinkedList():
             temp = temp.getAfter()
         self.size = i
 
+# FIND
+    def find(self, key):
+        temp = self.head
+        while(temp is not None):
+            if(temp.getId() == key):
+                return temp.getElement()
+            temp = temp.getAfter()
+        return None
+
+    def findPosition(self, position):
+        temp = self.head
+        count = 1
+        while(temp is not None):
+            if(count == position):
+                return temp.getElement()
+            count = count + 1
+            temp = temp.getAfter()
+        return None
 
 # ADD
     def add(self, element):
@@ -83,6 +101,39 @@ class DoubleLinkedList():
                     --self.size
                 before = current
                 current = current.getAfter()
+
+    def deletePosition(self, position = 0):
+        current = self.head
+        before = None
+        found = False
+        temp = self.head
+        last = None
+        count = 1
+
+        while(temp != None):
+            last = temp
+            temp = temp.getAfter()
+
+        if(self.head != None or found):
+            while(current != None):
+                if(count == position):
+                    if(self.size == 1):
+                        self.head = None
+                    elif(current == self.head):
+                        self.head = self.head.getAfter()
+                        self.head.setBefore(None)
+                    elif(current == last):
+                        before.setAfter(None)
+                        last = before
+                    else:
+                        if(before != None): before.setAfter(current.getAfter())
+                        current.getAfter().setBefore(before)
+                    self.size = self.size - 1
+                    return True
+                count = count - 1
+                before = current
+                current = current.getAfter()
+        return False
 
 # SORTED ADD 
     def sortedAdd(self, key, element):
@@ -633,31 +684,47 @@ class SparseMatrix():
     def get(self):
         return self.sparseMatrix
 
+    def getMatriz(self):
+        return self.matrix
+
 # ADD
     def add(self, column, row, element):
-        if(self.sparseMatrix == None) and (column <= self.columnMax) and (row <= self.rowMax):
+        if(self.sparseMatrix == None) and (column <= self.columnMax) and (row <= self.rowMax) and (column >=0) and (row >= 0):
             self.matrix[row][column] = element
             self.size = self.size + 1
-            return True
-        return False
+            return self.matrix[row][column]
+        return None
+
+# FIND 
+    def find(self, column, row):
+        if(self.sparseMatrix is not None):
+            for element in self.sparseMatrix:
+                if(element[0] == row) and (element[1] == column):
+                    return element[2]
+        return None
+
+    def findMatrix(self, column, row):
+        if(self.matrix is not None):
+            return self.matrix[row][column]
+        return None
 
 # ADD SPARSE MATRIX
     def addSparseMatrix(self):
         if(self.matrix is not None):
             self.sparseMatrix = [[None for column in range(3)] for row in range(self.size+1)]
-            temp = self.sparseMatrix
 
-            temp[0][0] = self.rowMax
-            temp[0][1] = self.columnMax
-            temp[0][2] = self.size
+            self.sparseMatrix[0][0] = self.rowMax
+            self.sparseMatrix[0][1] = self.columnMax
+            self.sparseMatrix[0][2] = self.size
 
             count = 1
             for row in range(self.rowMax):
                 for column in range(self.columnMax):
                     if(self.matrix[row][column] is not None):
-                        temp[count][0] = row
-                        temp[count][1] = column
-                        temp[count][2] = self.matrix[row][column]
+                        self.sparseMatrix[count][0] = row
+                        self.sparseMatrix[count][1] = column
+                        self.sparseMatrix[count][2] = self.matrix[row][column]
+
                         count = count + 1
 
 

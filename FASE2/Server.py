@@ -1,8 +1,9 @@
+from datetime import date
 from os import name, sep
 import json
 from flask import Flask, request, jsonify
 from controller import StudentController
-from model import Student
+from model import Reminder, Student
 
 app = Flask(__name__)
 
@@ -47,6 +48,7 @@ def bulkData():
     except KeyError:
         return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 
+# CLASE CRUD STUDENT ----------------------------------------------------------------------------------------------------
 @app.route('/estudiante', methods=['GET'])
 def findStudent():
     content = request.get_json(force=True)
@@ -127,7 +129,7 @@ def createStudent():
             })
         else:
             return jsonify({
-                    "estudiante": {
+                "estudiante": {
                     "carnet": carne,
                     "DPI": dpi,
                     "nombre": name,
@@ -183,7 +185,149 @@ def updateStudent():
     except KeyError:
         return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 
+# CLASE CRUD REMINDER ---------------------------------------------------------------------------------------------------
+@app.route('/recordatorios', methods=['POST'])
+def createReminder():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        carne = int(content["carnet"])
+        name = content["nombre"]
+        description = content["descripcion"]
+        subject = content["materia"]
+        date = content["fecha"]
+        hour = content["hora"]
+        state = content["estado"]
 
+        if(studentController.addReminder(carne, name, description, subject, date, hour, state)):
+            return jsonify({
+                "recordatorio": {
+                    "carnet": carne,
+                    "nombre": name, 
+                    "descripcion": description, 
+                    "materia": subject, 
+                    "fecha": date,
+                    "hora": hour, 
+                    "estado": state
+                },
+                "estado": "INGRESADO"
+            })
+        else:
+            return jsonify({
+                "recordatorio": {
+                    "carnet": carne,
+                    "nombre": name, 
+                    "descripcion": description, 
+                    "materia": subject, 
+                    "fecha": date,
+                    "hora": hour, 
+                    "estado": state
+                },
+                "estado": "NO INGRESADO",
+                "ERROR": "CARNE DE ESTUDIANTE NO ENCONTRADO"
+            })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
+
+@app.route('/recordatorios', methods=['PUT'])
+def updateReminder():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        carne = int(content["carnet"])
+        name = content["nombre"]
+        description = content["descripcion"]
+        subject = content["materia"]
+        date = content["fecha"]
+        hour = content["hora"]
+        state = content["estado"]
+        position = int(content["posicion"])
+
+        if(studentController.updateReminder(carne, name, description, subject, date, hour, state, position)):
+            return jsonify({
+                "recordatorio": {
+                    "carnet": carne,
+                    "nombre": name, 
+                    "descripcion": description, 
+                    "materia": subject, 
+                    "fecha": date,
+                    "hora": hour, 
+                    "estado": state
+                },
+                "estado": "ACTUALIZADO"
+            })
+        else:
+            return jsonify({
+                "recordatorio": {
+                    "carnet": carne,
+                    "nombre": name, 
+                    "descripcion": description, 
+                    "materia": subject, 
+                    "fecha": date,
+                    "hora": hour, 
+                    "estado": state
+                },
+                "ERROR": "RECORDATORIO NO ENCONTRADO"
+            })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
+
+@app.route('/recordatorios', methods=['DELETE'])
+def deleteReminder():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        carne = int(content["carnet"])
+        date = content["fecha"]
+        hour = content["hora"]
+        day, month, year = date.split("/")
+        hour = hour.split(":")
+        position = int(content["posicion"])
+        reminder = studentController.deleteReminder(carne, int(year), int(month), int(day), int(hour[0]), position)
+
+        if(reminder):
+            return jsonify({
+                "carnet": carne,
+                "estado": "ELIMINADO"
+            })
+        else:
+            return jsonify({
+                "carnet": carne,
+                "estado": "NO ENCONTRADO"
+            })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
+
+@app.route('/recordatorios', methods=['GET'])
+def findReminder():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        carne = int(content["carnet"])
+        date = content["fecha"]
+        hour = content["hora"]
+        day, month, year = date.split("/")
+        hour = hour.split(":")
+        position = int(content["posicion"])
+        reminder = studentController.findReminder(carne, int(year), int(month), int(day), int(hour[0]), position)
+
+        if(reminder is not None):
+            return jsonify({
+                "carnet": reminder.getCarne(),
+                "nombre": reminder.getName(), 
+                "descripcion": reminder.getDescription(), 
+                "materia": reminder.getSubject(), 
+                "fecha": reminder.getDate(),
+                "hora": reminder.getHour(), 
+                "estado": reminder.getState()
+            })
+        else:
+            return jsonify({
+                "carnet": carne,
+                "estado": "NO ENCONTRADO"
+            })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 
 if __name__ == '__main__':
     app.run('127.0.0.1', port=3000)

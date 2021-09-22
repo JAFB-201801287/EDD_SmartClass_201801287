@@ -131,10 +131,10 @@ class BTreeNode(object):
 
 
 # CLASE ESTUDIANTE ------------------------------------------------------------------------------------------------------
-class Student(object):
+class Student():
 
 # CONSTRUCTOR
-    def __init__(self, carne = 0, dpi = "", name = "", career = "", email = "", password = "", credits = 0, age = 0):
+    def __init__(self, carne = 0, dpi = "", name = "", career = "", email = "", password = "", credits = 0, age = 0, yearList = None):
         self.carne = carne
         self.dpi = dpi
         self.name = name
@@ -143,7 +143,7 @@ class Student(object):
         self.password = password
         self.credits = credits
         self.age = age
-        self.yearList = []
+        self.yearList = yearList
 
 # SETTERS
     def setCarne(self, carne):
@@ -234,23 +234,23 @@ class Year(object):
 class Month(object):
 
 # CONSTRUCTOR
-    def __init__(self, month = 0, homeworks = []):
+    def __init__(self, month = 0, schedule = []):
         self.month = month
-        self.homeworks = homeworks
+        self.schedule = schedule
 
 # SETTERS
     def setMonth(self, month):
         self.month = month
 
-    def setHomeworks(self, homeworks):
-        self.homeworks = homeworks
+    def setSchedule(self, schedule):
+        self.schedule = schedule
 
 # GETTERS
     def getMonth(self):
         return self.month
 
-    def getHomeworks(self):
-        return self.homeworks
+    def getSchedule(self):
+        return self.schedule
 
 # CLASE SEMESTER --------------------------------------------------------------------------------------------------------
 class Semester(object):
