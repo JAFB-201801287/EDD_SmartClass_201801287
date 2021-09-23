@@ -201,111 +201,6 @@ class DoubleLinkedList():
 
         return temp
 
-# CLASE LINKED LIST -----------------------------------------------------------------------------------------------------
-class LinkedList():
-
-# CONSTRUCTOR VACIO
-    def __init__(self):
-        self.index = 1
-        self.head = None
-        self.size = 0
-
-# GET LIST
-    def getList(self):
-        return self.head
-
-# GET SIZE
-    def getSize(self):
-        return self.size
-
-# SET HEAD
-    def setHead(self,  head):
-        self.head = head
-
-        i = 0
-        temp = head
-        while(temp is not None):
-            i = i+1
-            temp = temp.getAfter()
-        self.size = i
-
-
-# ADD
-    def add(self, element):
-        new_node = Node(self.index, element)
-        temp = self.head
-        last = Node()
-        
-        if(self.head == None):
-            self.head = new_node
-            self.head.setAfter(None) 
-            
-        else:
-            while(temp != None):
-                last = temp;
-                temp = temp.getAfter()
-        
-        last.setAfter(new_node)
-        new_node.setAfter(None)
-        last = new_node;
-
-        ++self.index
-        self.size = 1 + self.size
-
-    # DELETE
-    def delete(self, element):
-        current = self.head
-        before = None
-        found = False
-        temp = self.head
-        last = None
-
-        while(temp != None):
-            last = temp
-            temp = temp.getAfter()
-
-        if(self.head != None or found):
-            while(current != None):
-                if(current.getElement() == element):
-                    if(current == self.head):
-                        self.head = self.head.getAfter()
-                    elif(current == last):
-                        before.setAfter(None)
-                        last = before
-                    else:
-                        if(before != None): before.setAfter(current.getAfter())
-                        current.getAfter().setBefore(before)
-                    found = True
-                    --self.size
-                before = current
-                current = current.getAfter()
-
-# SORTED ADD 
-    def sortedAdd(self, key, element):
-        newNode = Node(key, element)
-        current = self.head
-        last = Node()
-        
-        if(self.head == None):
-            self.head = newNode;
-            self.head.setAfter(None) 
-            self.head.setBefore(None);
-        elif(self.head.getId() >= newNode.getId()):
-            newNode.setAfter(self.head)
-            newNode.getAfter().setBefore(newNode)
-            self.head = newNode
-        else:
-            while((current.getAfter() is not None) and (current.getAfter().getId() < newNode.getId())):
-                current = current.getAfter()
-            newNode.setAfter(current.getAfter())
-
-            if (current.getAfter() != None):
-                newNode.getAfter().setBefore(newNode)
-            current.setAfter(newNode)
-            newNode.setBefore(current)
-        
-        self.size = 1 + self.size
-
 # CLASE AVL TREE --------------------------------------------------------------------------------------------------------
 class AVLTree():
 
@@ -313,6 +208,14 @@ class AVLTree():
     def __init__(self):
         self.root = None
         self.size = 0
+
+# GET
+    def get(self):
+        return self.root
+
+# SIZE 
+    def size(self):
+        return self.size
 
 # INSERT
     def add(self, key, element):
@@ -419,11 +322,29 @@ class AVLTree():
         else:
             return node
 
-    def preOrderTraverse(self, node):
-         if node is not None:
-             print(str(node.getKey()) + " - " + str(node.getElement()))
-             self.preOrderTraverse(node.getLeft())
-             self.preOrderTraverse(node.getRight())
+    def getList(self):
+        if self.root is None:
+            return None
+        else:
+            return self.getAvl(self.root) 
+
+    def getAvl(self, node, conectId = 0, direction = ""):
+        temp = []
+        if node is not None:
+            temp.append({
+                "key": node.getKey(),
+                "element": node.getElement(),
+                "conect": conectId,
+                "direction": direction
+            })
+
+            if(node.getLeft() is not None):
+                temp = temp + self.getAvl(node.getLeft(), node.getKey(), "left")
+
+            if(node.getRight() is not None):
+                temp = temp + self.getAvl(node.getRight(), node.getKey(), "right")
+
+        return temp
 
 # DELETE
     def delete(self, key):

@@ -48,7 +48,28 @@ def bulkData():
     except KeyError:
         return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 
-# CLASE CRUD STUDENT ----------------------------------------------------------------------------------------------------
+# REPORTES --------------------------------------------------------------------------------------------------------------
+@app.route('/reporte', methods=['GET'])
+def reportStudent():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        tipo = int(content["tipo"])
+        
+
+        if(tipo == 0):
+            studentController.reportStudent()
+            return jsonify({
+                "response": "REPORTE DE ESTUDIANTE CREADO" 
+            })
+        else:
+            return jsonify({
+                "response": "REPORTE NO CREADO" 
+            })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
+
+# CRUD STUDENT ----------------------------------------------------------------------------------------------------------
 @app.route('/estudiante', methods=['GET'])
 def findStudent():
     content = request.get_json(force=True)
@@ -185,7 +206,7 @@ def updateStudent():
     except KeyError:
         return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 
-# CLASE CRUD REMINDER ---------------------------------------------------------------------------------------------------
+# CRUD REMINDER ---------------------------------------------------------------------------------------------------------
 @app.route('/recordatorios', methods=['POST'])
 def createReminder():
     content = request.get_json(force=True)
