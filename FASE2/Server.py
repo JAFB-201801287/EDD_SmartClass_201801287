@@ -50,7 +50,7 @@ def bulkData():
 
 # REPORTES --------------------------------------------------------------------------------------------------------------
 @app.route('/reporte', methods=['GET'])
-def reportStudent():
+def report():
     content = request.get_json(force=True)
     studentController = StudentController()
     try:
@@ -61,6 +61,24 @@ def reportStudent():
             studentController.reportStudent()
             return jsonify({
                 "response": "REPORTE DE ESTUDIANTE CREADO" 
+            })
+        elif(tipo == 1):
+            carne = int(content["carnet"])
+            year = int(content["año"])
+            month = int(content["mes"])
+            studentController.reportCalendar(carne, year, month)
+            return jsonify({
+                "response": "REPORTE DE MATRIZ DISPERSA CREADO" 
+            })
+        elif(tipo == 2):
+            carne = int(content["carnet"])
+            year = int(content["año"])
+            month = int(content["mes"])
+            day = int(content["dia"])
+            hour = int(content["hora"])
+            studentController.reportReminder(carne, year, month, day, hour)
+            return jsonify({
+                "response": "REPORTE DE TAREAS CREADO" 
             })
         else:
             return jsonify({
