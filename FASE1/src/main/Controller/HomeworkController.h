@@ -6,6 +6,7 @@
 #include <regex>
 #include <sstream>
 #include <fstream>
+#include <ctime>
 
 #include "../Model/Homework.cpp"
 #include "../Lists/DoubleLinkedList.cpp"
@@ -31,6 +32,7 @@ class HomeworkController: public DoubleLinkedList<Homework>
         Homework *matriz[5][30][9];
         static HomeworkController* instance;
         string* split(string);
+        string splitDate(string);
         string replace(string);
         void init_matriz();
     public:

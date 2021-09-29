@@ -46,6 +46,26 @@ string* HomeworkController::split(string line)
     return elements;
 }
 
+string HomeworkController::splitDate(string line) 
+{
+    string *elements = new string[3];
+    int cont = 0;
+    string delimiter = "/";
+    int start = 0;
+    int end = line.find(delimiter);
+    while (end != -1) {
+        elements[cont] = line.substr(start, end - start);
+        start = end + delimiter.size();
+        end = line.find(delimiter, start);
+        cont++;
+    }
+    string temp = (line.substr(start, end - start));
+    temp = this->replace(temp);
+    elements[cont] = temp;
+
+    return (elements[2] + "/" + elements[1] + "/" + elements[0]);
+}
+
 void HomeworkController::init_matriz()
 {
     int month = 5;
@@ -92,7 +112,6 @@ string HomeworkController::replace(string line)
 void HomeworkController::add_matriz(Homework homework, int month, int day, int hour) 
 {
     bool flag = true;
-    bool error_state = false;
     bool error_date = false;
 
     if(this->matriz[month-7][day-1][hour-8] == NULL) 
@@ -119,14 +138,6 @@ void HomeworkController::add_matriz(Homework homework, int month, int day, int h
         cout << " ERROR FORMATO DE MES, DIA O HORA ES INCORRECTO." << endl;
     }
 
-    if ((homework.getState() == "Incumplido") || (homework.getState() == "Pendiente") || (homework.getState() == "Cumplido"))
-    {
-        cout << " FORMATO DE ESTADO ACEPTADO." << endl;
-    } else {
-        error_state = true;
-        cout << " ERROR FORMATO DE ESTADO INCORRECTO." << endl;
-    }
-
     string date = homework.getDate(); 
     if(is_date_valid(date)) 
     {
@@ -143,11 +154,6 @@ void HomeworkController::add_matriz(Homework homework, int month, int day, int h
         this->matriz[month-7][day-1][hour-8] = &homework;
         add_homework(homework);
         cout << " SE INGRESO LA INFORMACION DEL ESTUDIANTE.";
-        if(error_state) 
-        {
-            errorController->add_error("TAREA", "ESTADO", homework.getId(), "");
-            cout << "  (ERROR EN ESTADO)";
-        } 
 
         if(error_date) 
         {
@@ -507,7 +513,7 @@ void HomeworkController::generated_code()
             diagram += "\t\t¿item Nombre = \"" + current->element.getName() + "\" $?\n";
             diagram += "\t\t¿item Descripcion = \"" + current->element.getDescription() + "\" $?\n";
             diagram += "\t\t¿item Materia = \"" + current->element.getMatter() + "\" $?\n";
-            diagram += "\t\t¿item Fecha = \"" + current->element.getDate() + "\" $?\n";
+            diagram += "\t\t¿item Fecha = \"" + splitDate(current->element.getDate()) + "\" $?\n";
             diagram += "\t\t¿item Hora = \"" + to_string(current->element.getHour()) + ":00\" $?\n";
             diagram += "\t\t¿item Estado = \"" + current->element.getState() + "\" $?\n";
             diagram += "\t¿$element?\n\n";

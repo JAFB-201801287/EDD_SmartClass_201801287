@@ -11,3 +11,9 @@ source venv/bin/activate
 
 // FLASK
 pip install Flask
+
+// graphviz
+pip3 install graphviz
+
+lsof -i :3000
+kill -9

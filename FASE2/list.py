@@ -70,7 +70,7 @@ class DoubleLinkedList():
         new_node.setAfter(None)
         last = new_node;
 
-        ++self.index
+        self.index += 1 + self.index
         self.size = 1 + self.size
 
     # DELETE
@@ -200,6 +200,54 @@ class DoubleLinkedList():
         temp.append(head2)
 
         return temp
+
+# CLASE LINKED LIST -----------------------------------------------------------------------------------------------------
+class LinkedList():
+
+# CONSTRUCTOR VACIO
+    def __init__(self):
+        self.index = 1
+        self.head = None
+        self.size = 0
+
+# GET LIST
+    def getList(self):
+        return self.head
+
+# GET SIZE
+    def getSize(self):
+        return self.size
+
+# FIND
+    def find(self, key):
+        temp = self.head
+        while(temp is not None):
+            if(temp.getId() == key):
+                return temp.getElement()
+            temp = temp.getAfter()
+        return None
+
+# ADD
+    def add(self, element):
+        new_node = Node(self.index, element)
+        temp = self.head
+        last = Node()
+        
+        if(self.head == None):
+            self.head = new_node
+            self.head.setAfter(None)      
+        else:
+            while(temp != None):
+                last = temp;
+                temp = temp.getAfter()
+        
+        last.setAfter(new_node)
+        new_node.setAfter(None)
+        last = new_node;
+
+        self.index += 1 + self.index
+        self.size = 1 + self.size
+
 
 # CLASE AVL TREE --------------------------------------------------------------------------------------------------------
 class AVLTree():
@@ -572,23 +620,38 @@ class BTree():
             current = current.getAfter()
 
 # PRINT
-    def printNode(self, node = None, c = 0):
+
+    def getNodes(self):
+        return self.printNode(self.root)
+
+    def printNode(self, node = None, parent = None):
+        temp = []
         if(node is None):
+            key = self.root.getMinKey()
             elements = self.root.getElements().getList()
             nodes = self.root.getNodes().getList()
         else:
+            key = node.getMinKey()
             elements = node.getElements().getList()
             nodes = node.getNodes().getList()
+            size = node.getElements().getSize()
+        
+        temp.append({
+            "key": key,
+            "elements": elements,
+            "parent": parent,
+            "size": size
+        })
 
-        while(elements is not None):
-            print(str(elements.getElement()) + " NIVEL: " + str(c))
-            elements = elements.getAfter()
+        #while(elements is not None):
+        #    print(str(elements.getElement()))
+        #    elements = elements.getAfter()
 
-        print("-------------------------------------")
         while(nodes is not None):
-            print("INICIO >> " + str(nodes) + " - " + str(nodes.getElement().getParent().getMinKey()) + " - MIN: " + str(nodes.getElement().getMinKey()) + " ID: " + str(nodes.getId()))
-            self.printNode(nodes.getElement(), c+1)
+            #print("INICIO >> " + str(nodes) + " - " + str(nodes.getElement().getParent().getMinKey()) + " - MIN: " + str(nodes.getElement().getMinKey()) + " ID: " + str(nodes.getId()))
+            temp += self.printNode(nodes.getElement(), key)
             nodes = nodes.getAfter()
+        return temp
 
 # CLASE SPARCE MATRIZ ---------------------------------------------------------------------------------------------------
 class SparseMatrix():
@@ -605,23 +668,35 @@ class SparseMatrix():
     def get(self):
         return self.sparseMatrix
 
+    def getColumnMax(self):
+        return self.columnMax
+
+    def getRowMax(self):
+        return self.rowMax
+
     def getMatriz(self):
         return self.matrix
 
+    def getSize(self):
+        return self.size
+
 # ADD
     def add(self, column, row, element):
-        if(self.sparseMatrix == None) and (column <= self.columnMax) and (row <= self.rowMax) and (column >=0) and (row >= 0):
-            self.matrix[row][column] = element
-            self.size = self.size + 1
+        if(self.matrix is not None) and (column < self.columnMax) and (row < self.rowMax) and (column >=0) and (row >= 0):
+            if(self.matrix[row][column] is None):
+                self.matrix[row][column] = element
+                self.size = self.size + 1
             return self.matrix[row][column]
         return None
 
 # FIND 
     def find(self, column, row):
         if(self.sparseMatrix is not None):
+            flag = False
             for element in self.sparseMatrix:
-                if(element[0] == row) and (element[1] == column):
+                if(element[0] == row) and (element[1] == column) and (flag):
                     return element[2]
+                flag = True
         return None
 
     def findMatrix(self, column, row):

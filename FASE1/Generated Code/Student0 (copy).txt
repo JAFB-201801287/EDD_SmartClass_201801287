@@ -10,29 +10,6 @@
 		¿item Edad = 20 $?
 		¿item Correo = "AlvinHuckett_60@outlook.org" $?
 	¿$element?
-	
-	¿element type="user"?
-		¿item Carnet = "201901423" $?
-		¿item DPI = "2050740200289" $?
-		¿item Nombre = "User1" $?
-		¿item Carrera = "Ingenieria Quimica" $?
-		¿item Password = "DGHS2Xi" $?
-		¿item Creditos = 222 $?
-		¿item Edad = 20 $?
-		¿item Correo = "user1@outlook.org" $?
-	¿$element?
-	
-	¿element type="user"?
-		¿item Carnet = "201722412" $?
-		¿item DPI = "2050740200289" $?
-		¿item Nombre = "User2" $?
-		¿item Carrera = "Ingenieria Quimica" $?
-		¿item Password = "DGHS2Xi" $?
-		¿item Creditos = 222 $?
-		¿item Edad = 20 $?
-		¿item Correo = "user2@outlook.org" $?
-	¿$element?
-
 
 	¿element type="user"?
 		¿item Carnet = "201024444" $?
