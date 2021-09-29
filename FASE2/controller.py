@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-from enum import Flag
+import json
 from os import system
 import re
 import calendar
+from sys import flags
 import graphviz
 from graphviz import nohtml
 
-from model import Node, Student, Reminder, Year, Month, Course
-from list import BTree, DoubleLinkedList, AVLTree, SparseMatrix
+from model import Node, Semester, Student, Reminder, Year, Month, Course
+from list import BTree, DoubleLinkedList, LinkedList, AVLTree, SparseMatrix
 
 def fileReader(address = ""):
     data = ""
@@ -15,6 +16,13 @@ def fileReader(address = ""):
         for line in f.readlines():
             data += line.replace("\n", " ")
     return data
+
+def dicReader(dic, keyValue):
+    for key, value in dic.items():
+        if(key.lower() == keyValue.lower()):
+            return value
+    return None
+        
 
 # CLASE STUDENT CONTROLLER ----------------------------------------------------------------------------------------------
 class StudentController(object):
@@ -28,8 +36,9 @@ class StudentController(object):
             StudentController.__instance = object.__new__(cls)
         return StudentController.__instance
 
-    def bulkLoad(self, address, isStudent, isReminder, isCurse):
-        data = fileReader(address)
+    def bulkLoad(self, address, isStudent, isReminder, isCurse, value = None):
+        if(value is None):
+            data = fileReader(address)
         
         if(isStudent or isReminder):
             match = re.match("\¿Elements\?(?P<content>(.)*)\¿\$Elements\?", data)
@@ -60,7 +69,33 @@ class StudentController(object):
                     state = re.findall("\¿[\s|\n]*item[\s|\n]*Estado[\s|\n]*=[\s|\n]*\"(?P<content>[^\"]+)\"[\s|\n]*\$\?", reminder[0])
 
                     self.addReminder(int(carne[0]), name[0], description[0], subject[0], date[0], hour[0], state[0])
+        if(isCurse):
+            if(value is None):
+                value = json.loads(data)
 
+            students = dicReader(value, "Estudiantes")
+
+            if(students is not None):
+                for student in students:
+                    carnet = dicReader(student, "Carnet")
+                    years = dicReader(student, "Años")
+                    if(years is not None):
+                        for value1 in years:
+                            year = dicReader(value1, "Año")
+                            semesters = dicReader(value1, "Semestres")
+                            if(semesters is not None):
+                                for value2 in semesters:
+                                    semester = dicReader(value2, "Semestre")
+                                    courses = dicReader(value2, "Cursos")
+                                    if(courses is not None):
+                                        for value3 in courses:
+                                            code = dicReader(value3, "Codigo")
+                                            name = dicReader(value3, "Nombre")
+                                            credits = dicReader(value3, "Creditos")
+                                            prerequisits = dicReader(value3, "Prerequisitos")
+                                            mandatory = dicReader(value3, "Obligatorio")
+                                            #print("CARNET:", carnet, "AÑO:", year, "SEMESTRE:", semester, "CODIGO:", code, "NOMBRE:", name)
+                                            self.addCourse(int(carnet), int(year), int(semester), int(code), name, int(credits), prerequisits, mandatory)
 
     def add(self, carne = 0, dpi = "", name = "", career = "", email = "", password = "", credits = 0, age = 0):
         if(self.avlTree is not None) and (self.find(carne) is None):
@@ -101,10 +136,26 @@ class StudentController(object):
         if(student is not None):
             temp = student.getYearList().find(year)
             if(temp is None):
-                temp = Year(year, DoubleLinkedList(), DoubleLinkedList())
+                temp = Year(year, DoubleLinkedList(), LinkedList())
                 student.getYearList().sortedAdd(year, temp)
             return temp
-        return None       
+        return None  
+
+    def addSemester(self, carne, year, semester):
+        tempyear = self.addYear(carne, year)
+        if(tempyear is not None) and (1 <= semester <= 2):
+            temp = None
+            node = tempyear.getSemesters().getList()
+            while(node is not None):
+                if(node.getElement().getSemester() == semester):
+                    temp = node.getElement()
+                node = node.getAfter()
+
+            if(temp is None):
+                temp = Semester(semester, BTree()) 
+                tempyear.getSemesters().add(temp)
+            return temp
+        return None   
 
     def addMonth(self, carne, year, month):
         tempYear = self.addYear(carne, year)
@@ -115,6 +166,32 @@ class StudentController(object):
                 tempYear.getMonths().sortedAdd(month, temp)
             return temp
         return None
+
+    def reportCourse(self, carnet, year, semester):
+        student = self.find(carnet)
+
+        if(student is not None):
+            year = student.getYearList().find(year)
+            if(year is not None):
+                temp = year.getSemesters().getList()
+                aux =  None
+                while(temp is not None and aux is None):
+                    if(temp.getElement().getSemester() == semester):
+                        aux = temp.getElement().getCourses()
+                    temp = temp.getAfter()
+
+                if(aux is not None):
+                    courseController = CourseController()
+                    courseController.report(aux)
+    
+    def addCourse(self, carne, year, semester, code, name, credits, prerequisits, mandatory):
+        semester = self.addSemester(carne, year, semester)
+
+        if(semester is not None) :
+            course = Course(code, name, credits, prerequisits, mandatory)
+            semester.getCourses().add(code, course)
+            return True
+        return False
 
     def addReminder(self, carne = 0, name = "", description = "", subject = "", date = "", hour = 0, state = ""):
         day, month, year = date.split("/")
@@ -326,8 +403,92 @@ class StudentController(object):
                         value = value.getAfter()
 
                     g.render()
-                    g.view()
-
-
-                
+                    g.view()  
         return None
+
+# CLASE CURSE CONTROLLER ------------------------------------------------------------------------------------------------
+class CourseController(object):
+    __instance = None
+    bTree = BTree()
+
+    # SINGLETON
+    @staticmethod
+    def __new__(cls):
+        if CourseController.__instance is None:
+            CourseController.__instance = object.__new__(cls)
+        return CourseController.__instance
+
+    def add(self, code, name, credits, prerequisits, mandatory):
+        course = Course(code, name, credits, prerequisits, mandatory)
+        self.bTree.add(code, course)
+
+    def bulkLoad(self, address, isCurse, value = None):
+
+        if(isCurse):
+            flag = False
+            if(value is None):
+                data = fileReader(address)
+                value = json.loads(data)
+
+            for key, value in value.items():
+                if(key.lower() == "cursos"):
+                    flag = True
+                    for curso in value:
+                        code = ""
+                        name = ""
+                        credits = ""
+                        prerequisits = ""
+                        require = ""
+                        for key1, value1 in curso.items():
+                            if(key1.lower() == "codigo"):
+                                code = int(value1)
+                            elif(key1.lower() == "nombre"):
+                                name = value1
+                            elif(key1.lower() == "creditos"):
+                                credits = int(value1)
+                            elif(key1.lower() == "prerequisitos"):
+                                prerequisits = value1
+                            elif(key1.lower() == "obligatorio"):
+                                require = value1
+                        self.add(code, name, credits, prerequisits, require)
+        return flag
+    
+    def report(self, node = None):
+        if(node is None):
+            btree = self.bTree
+        else:
+            btree = node
+
+        if(btree is not None):
+            g = graphviz.Digraph('g', filename='/home/jafb/Reportes_F2/GeneralCourseReport/btree.gv', format='svg',
+                        node_attr={'shape': 'record', 'height': '.1'})
+
+            nodes = btree.getNodes()
+            
+            for node in nodes:
+                key = node['key']
+                elements = node['elements']
+                parent = node['parent']
+                size = node['size']
+
+                #print(key, elements, parent)
+
+                temp = elements
+                count = 0
+                aux = ""
+                if(temp is not None) and (temp.getElement() is not None):
+                    element = temp.getElement()
+                    aux = "{ CODIGO: " + str(element.getCode()) + "| NOMBRE: " + str(element.getName()) + "}"
+
+                    count += 1
+                    temp = temp.getAfter()
+
+                while(temp is not None):
+                    element = temp.getElement()
+                    aux += " | { CODIGO: " + str(element.getCode()) + "| NOMBRE: " + str(element.getName()) + "}"
+                    count += 1
+                    temp = temp.getAfter()
+                g.node('node' + str(key), nohtml("{ {" + aux + "} }"))
+                if(parent is not None):
+                    g.edge('node' + str(parent), 'node' + str(key))
+            g.view()

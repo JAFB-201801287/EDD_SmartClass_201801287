@@ -2,7 +2,7 @@ from datetime import date
 from os import name, sep
 import json
 from flask import Flask, request, jsonify
-from controller import StudentController
+from controller import StudentController, CourseController
 from model import Reminder, Student
 
 app = Flask(__name__)
@@ -15,6 +15,7 @@ def start():
 def bulkData():
     content = request.get_json(force=True)
     studentController = StudentController()
+    courseController = CourseController()
     try:
         isStudent = False
         isReminder = False
@@ -31,9 +32,15 @@ def bulkData():
             elif(data == "curso"):
                 isCurse = True
 
-        studentController.bulkLoad(path, isStudent, isReminder, isCurse)
-
-        if(isStudent or isReminder or isCurse):
+        if(isStudent or isReminder):
+            studentController.bulkLoad(path, isStudent, isReminder, isCurse)
+            return jsonify({
+                "tipo": type,
+                "path": path
+            })
+        elif(isCurse):
+            if(not courseController.bulkLoad(path, isCurse)):
+                studentController.bulkLoad(path, False, False, isCurse)
             return jsonify({
                 "tipo": type,
                 "path": path
@@ -53,6 +60,7 @@ def bulkData():
 def report():
     content = request.get_json(force=True)
     studentController = StudentController()
+    courseController = CourseController()
     try:
         tipo = int(content["tipo"])
         
@@ -79,6 +87,19 @@ def report():
             studentController.reportReminder(carne, year, month, day, hour)
             return jsonify({
                 "response": "REPORTE DE TAREAS CREADO" 
+            })
+        elif(tipo == 3):
+            courseController.report()
+            return jsonify({
+                "response": "REPORTE DE CURSOS GENERAL CREADO" 
+            })
+        elif(tipo == 4):
+            carnet = int(content["carnet"])
+            year = int(content["año"])
+            semester = int(content["semestre"])
+            studentController.reportCourse(carnet, year, semester)
+            return jsonify({
+                "response": "REPORTE DE CURSOS DE ESTUDIANTE CREADO" 
             })
         else:
             return jsonify({
@@ -365,6 +386,31 @@ def findReminder():
                 "carnet": carne,
                 "estado": "NO ENCONTRADO"
             })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
+
+# CRUD COURSE -----------------------------------------------------------------------------------------------------------
+@app.route('/cursosPensum', methods=['POST'])
+def createPensumCourse():
+    content = request.get_json(force=True)
+    courseController = CourseController()
+    try:
+        courseController.bulkLoad("", True, content)
+        return jsonify({
+            "estado" : "INGRESADO"
+        })
+    except KeyError:
+        return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
+
+@app.route('/cursosEstudiante', methods=['POST'])
+def createStudentCourse():
+    content = request.get_json(force=True)
+    studentController = StudentController()
+    try:
+        studentController.bulkLoad("", False, False, True, content)
+        return jsonify({
+            "estado" : "INGRESADO"
+        })
     except KeyError:
         return jsonify({"ERROR":"LLAVE NO ENCONTRADA"})
 

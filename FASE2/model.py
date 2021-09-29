@@ -208,7 +208,7 @@ class Year(object):
     def __init__(self, year = 0, months = [], semesters = []):
         self.year = year
         self.months = months
-        self.semester = semesters
+        self.semesters = semesters
 
 # SETTERS
     def setYear(self, year):
